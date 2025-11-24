@@ -44,7 +44,7 @@ Multimodal, evidence-driven AI pipelines, conducting continuously self-improving
 * **Reproducibility:** every experiment logged, variantable, auditable.
 * **Evidence fusion:** literature, data streams, simulations, experiments.
 * **Tradeoff visualizer:** navigate multi-dimensional scientific spaces.
-* **Literature Triangulation:** conceptual, cross-disciplinary, multi-languages extraction.   
+* **Literature Triangulation:** conceptual, cross-disciplinary, multi-language extraction.   
 * **Foresight modules:** explore counterfactuals and plausible research pathways.
 * **R&D automations:** run iterative loops, generate experiment variants, evaluate.
 * **Cross-disciplinary generalization:** supports a wide range of scientific domains.
