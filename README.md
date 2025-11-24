@@ -2,9 +2,9 @@
 
 A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity.
 
-This is how we build the next era of R&D Labs.
-This is how we leverage frontier science.
-This is how we push civilization forward.
+This is how we build the next era of R&D Labs.<br>
+This is how we leverage frontier science.<br>
+This is how we push civilization forward.<br>
 
 ---
 ## TL;DR
@@ -74,19 +74,19 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 
 ### Purpose
 
-* Explore full scientific iterations end-to-end at research-grade depth.
-* Combine disparate features or data modalities.
-* Examine how compute, time, complexity, or question-framing    affects outcomes.
-* Real-time multi-user collaboration and feedback loops.
-* A portal into the “future lab” experience.
+💠 Explore full scientific iterations end-to-end at research-grade depth.<br> 
+💠 Combine disparate features or data modalities.<br>
+💠 Examine how compute, time, complexity, or question-framing affects outcomes.<br>
+💠 Real-time multi-user collaboration and feedback loops.<br>
+💠 A portal into the “future lab” experience.<br>
 
 ---
 
 ### Outcome
 
-* Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.
-* Conducts the next major science paradigm.
-* Multiplies creativity, knowledge, and insight.
+💠 Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.<br>
+💠 Conducts the next major science paradigm.<br>
+💠 Multiplies creativity, knowledge, and insight.<br>
 
 ---
 
