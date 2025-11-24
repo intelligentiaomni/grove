@@ -17,15 +17,15 @@ This is how we push civilization forward.<br>
 
 A full-stack open-source system that ties together reasoning, computation, visualization, simulations, and collaboration.
 
-* **Rust** — performance, deterministic orchestration, simulations, safety.
-* **Python** — ML runtime (PyTorch), data pipelines, embeddings, notebooks.
-* **TypeScript / Next.js** — dashboards, interaction layers, visualization.
-* **WASM / WebGPU** — real-time visualizations + browser-based simulation kernels.
-* **PyTorch** — training, fine-tuning, multimodal embeddings, differentiable modeling.
-* **ONNX** Runtime — portable deployment of models across Rust, Python, and browser.
-* **Git LFS** + datasets — versioned scientific and experimental assets.
-* **APIs** + agent endpoints — modular and extensible system commands.
-* Rust → WASM → Browser — compile simulation + inference into the UI.
+* **Rust:** performance, deterministic orchestration, simulations, safety.
+* **Python:** ML runtime (PyTorch), data pipelines, embeddings, notebooks.
+* **TypeScript / Next.js:** dashboards, interaction layers, visualization.
+* **WASM / WebGPU:** real-time visualizations + browser-based simulation kernels.
+* **PyTorch:** training, fine-tuning, multimodal embeddings, differentiable modeling.
+* **ONNX** Runtime: portable deployment of models across Rust, Python, and browser.
+* **Git LFS** + datasets: versioned scientific and experimental assets.
+* **APIs** + agent endpoints: modular and extensible system commands.
+* Rust → WASM → Browser: compile simulation + inference into the UI.
 
 ### System-Level Goals
 
@@ -74,19 +74,19 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 
 ### Purpose
 
-💠 Explore full scientific iterations end-to-end at research-grade depth.<br> 
-💠 Combine disparate features or data modalities.<br>
-💠 Examine how compute, time, complexity, or question-framing affects outcomes.<br>
-💠 Real-time multi-user collaboration and feedback loops.<br>
-💠 A portal into the “future lab” experience.<br>
+* Explore full scientific iterations end-to-end at research-grade depth.<br> 
+* Combine disparate features or data modalities.<br>
+* Examine how compute, time, complexity, or question-framing affects outcomes.<br>
+* Real-time multi-user collaboration and feedback loops.<br>
+* A portal into the “future lab” experience.<br>
 
 ---
 
 ### Outcome
 
-💠 Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.<br>
-💠 Conducts the next major science paradigm.<br>
-💠 Multiplies creativity, knowledge, and insight.<br>
+* Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.<br>
+* Conducts the next major science paradigm.<br>
+* Multiplies creativity, knowledge, and insight.<br>
 
 ---
 
