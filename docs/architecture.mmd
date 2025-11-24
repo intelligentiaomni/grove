@@ -1,0 +1,24 @@
+graph TD
+    A["IO Lab\n(Co-Scientist Platform)"] --> B["Grove Engine\n(Rust Core + ML + WASM)"]
+    
+    B --> C["Engine-Core\nSimulation + Compute Kernels"]
+    B --> D["Engine-ML\nInference Layer (PyTorch / ONNX)"]
+    B --> E["Engine-WASM\nBrowser Bridge / Visualizations"]
+    B --> F["Engine-MM\nMultimodal Fusion"]
+    
+    C --> G["Wavefields\nWave / Sieve / Field Computation"]
+    
+    D --> H["Hypothesis Agent\nExperiment Planning"]
+    D --> I["Experiment Planner\nR&D Automation"]
+    
+    F --> J["Vision\nCLIP / EVA Embeddings"]
+    F --> K["Sequences\nPrime Sieve Embeddings"]
+    F --> L["Fusion\nMultimodal Fuser"]
+    
+    H --> M["Continuous Discovery\nLogging + Feedback"]
+    M --> N["Tradeoff Visualizer / Foresight Engine"]
+    N --> O["Guided Discovery Loops\nAdaptive Reasoning"]
+    
+    P["Builder Game\nSimulation & Digital Twin"] --> C
+    P --> D
+    P --> F

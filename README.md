@@ -54,9 +54,9 @@ Multimodal, evidence-driven AI pipelines, conducting continuously self-improving
 
 ### **Engine Goals**
 
-* Robust error analysis and uncertainty quantification  
-* Fast, inexpensive *pre-validation* of scientific ideas  
-* Cognitive-science-inspired hypothesis mapping
+* Robust error analysis and uncertainty quantification. 
+* Fast, inexpensive *pre-validation* of scientific ideas.  
+* Cognitive-science-inspired hypothesis mapping.
 
 ---
 
@@ -87,15 +87,24 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 ### **Outcome**
 
 * Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.
-* Conducts the next major science paradigm
-* Multiplies creativity, knowledge, and insight
+* Conducts the next major science paradigm.
+* Multiplies creativity, knowledge, and insight.
 
 ---
 
-## IO Lab Architecture
+## Architecture Diagram
 
-flowchart TD
-    U[User Input] --> I[Idea / Scenario Input] --> ECORE[IO LAB ENGINE]
+Shows the core engine, multimodal layers, reasoning agents, and Builder Game integration.
+
+### View Editable Diagram
+You can explore and edit the Mermaid source directly:
+
+[Open Architecture Diagram (.mmd)](docs/architecture.mmd)
+
+### View Ready-to-View Diagram
+Or see the rendered SVG in your browser:
+
+![Architecture Diagram](docs/architecture.svg)
 
 ---
 ```
