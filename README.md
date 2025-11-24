@@ -1,4 +1,4 @@
-# GROVE a UNIX for AI-Augmented Scientific Discovery
+## GROVE a UNIX for AI-Augmented Scientific Discovery
 
 A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity.
 
@@ -17,14 +17,14 @@ This is how we push civilization forward.
 
 A full-stack open-source system that ties together reasoning, computation, visualization, simulations, and collaboration.
 
-* Rust — performance, deterministic orchestration, simulations, safety.
-* Python — ML runtime (PyTorch), data pipelines, embeddings, notebooks.
-* TypeScript / Next.js — dashboards, interaction layers, visualization.
-* WASM / WebGPU — real-time visualizations + browser-based simulation kernels.
-* PyTorch — training, fine-tuning, multimodal embeddings, differentiable modeling.
-* ONNX Runtime — portable deployment of models across Rust, Python, and browser.
-* Git LFS + datasets — versioned scientific and experimental assets.
-* APIs + agent endpoints — modular and extensible system commands.
+* **Rust** — performance, deterministic orchestration, simulations, safety.
+* **Python** — ML runtime (PyTorch), data pipelines, embeddings, notebooks.
+* **TypeScript / Next.js** — dashboards, interaction layers, visualization.
+* **WASM / WebGPU** — real-time visualizations + browser-based simulation kernels.
+* **PyTorch** — training, fine-tuning, multimodal embeddings, differentiable modeling.
+* **ONNX** Runtime — portable deployment of models across Rust, Python, and browser.
+* **Git LFS** + datasets — versioned scientific and experimental assets.
+* **APIs** + agent endpoints — modular and extensible system commands.
 * Rust → WASM → Browser — compile simulation + inference into the UI.
 
 ### System-Level Goals
