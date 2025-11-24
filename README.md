@@ -94,11 +94,8 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 
 Shows the core engine, multimodal layers, reasoning agents, and Builder Game integration.
 
-You can explore and edit the Mermaid source directly:
-
 [Open Architecture Diagram (.mmd)](docs/architecture.mmd)
 
-Or see the rendered SVG in your browser:
 
 ![Architecture Diagram](docs/architecture.svg)
 
