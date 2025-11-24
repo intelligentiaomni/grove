@@ -1,4 +1,4 @@
-# **GROVE — a UNIX for AI-Augmented Scientific Discovery**
+# GROVE a UNIX for AI-Augmented Scientific Discovery
 
 A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity.
 
@@ -7,13 +7,13 @@ This is how we leverage frontier science.
 This is how we push civilization forward.
 
 ---
-## **TL;DR**
+## TL;DR
 
 **GROVE** is a **scientific operating system**, a **reasoning engine**, and a **continuous discovery platform**, to progress science via predictable output: insights, discoveries, optimized designs, validated experiments, or decisions. It's built from first principles of AI and human collaboration, integrated in an architecture that is intentionally generalizable and future-facing, signaling a path toward **autonomous, evidence-driven, multimodal scientific research**.
 
 ---
 
-## **Scientific Architecture**
+## Scientific Architecture
 
 A full-stack open-source system that ties together reasoning, computation, visualization, simulations, and collaboration.
 
@@ -27,7 +27,7 @@ A full-stack open-source system that ties together reasoning, computation, visua
 * APIs + agent endpoints — modular and extensible system commands.
 * Rust → WASM → Browser — compile simulation + inference into the UI.
 
-### **System-Level Goals**
+### System-Level Goals
 
 * A **programmable, modular OS** for scientific reasoning.
 * Language-agnostic, composable toolkit for computational research.
@@ -35,11 +35,9 @@ A full-stack open-source system that ties together reasoning, computation, visua
 
 ---
 
-## **Continuous Discovery Engine**
+## Continuous Discovery Engine
 
 Multimodal, evidence-driven AI pipelines, conducting continuously self-improving discovery feedback iterations.
-
-### **Capabilities**
 
 * **Multimodal reasoning:** text, code, data, simulations, spatial, visual inputs.
 * **Hypothesis engine:** proposes, refines, compares research directions.
@@ -52,7 +50,7 @@ Multimodal, evidence-driven AI pipelines, conducting continuously self-improving
 * **Cross-disciplinary generalization:** supports a wide range of scientific domains.
 * **Multi-team collaboration:** shared memory, syncing, real-time co-exploration.
 
-### **Engine Goals**
+### Engine Goals
 
 * Robust error analysis and uncertainty quantification. 
 * Fast, inexpensive *pre-validation* of scientific ideas.  
@@ -60,13 +58,13 @@ Multimodal, evidence-driven AI pipelines, conducting continuously self-improving
 
 ---
 
-### **Long-term arc**
+### Long-term arc
 
 * Builds toward **generalized reasoning, automatic workflows + data-driven research automation**.
 
 ---
 
-## **Testing, Simulations, Digital Twins**
+## Testing, Simulations, Digital Twins
 
 Builder Game becomes an asset for experimentation and conceptual testing.
 
@@ -74,7 +72,7 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 * **Digital twins** of materials, processes, and scientific scenarios.
 * Test unconventional ideas in controlled virtual environments.
 
-### **Purpose**
+### Purpose
 
 * Explore full scientific iterations end-to-end at research-grade depth.
 * Combine disparate features or data modalities.
@@ -84,7 +82,7 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 
 ---
 
-### **Outcome**
+### Outcome
 
 * Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.
 * Conducts the next major science paradigm.
@@ -92,21 +90,21 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 
 ---
 
-## Architecture Diagram
+### Architecture Diagram
 
 Shows the core engine, multimodal layers, reasoning agents, and Builder Game integration.
 
-### View Editable Diagram
 You can explore and edit the Mermaid source directly:
 
 [Open Architecture Diagram (.mmd)](docs/architecture.mmd)
 
-### View Ready-to-View Diagram
 Or see the rendered SVG in your browser:
 
 ![Architecture Diagram](docs/architecture.svg)
 
 ---
+
+### Directory structure
 ```
 grove/
 ├── README.md
