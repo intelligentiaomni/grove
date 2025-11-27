@@ -102,7 +102,7 @@ Shows the core engine, multimodal layers, reasoning agents, and Builder Game int
 ---
 
 ### Directory structure
-
+```
 grove/
 ├── README.md
 ├── LICENSE
@@ -241,3 +241,4 @@ grove/
 ├── Dockerfile
 ├── Makefile
 └── .github/                        # CI/CD
+```
