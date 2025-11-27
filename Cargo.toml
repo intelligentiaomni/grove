@@ -1,0 +1,8 @@
+[workspace]
+members = [
+  "engine-core",
+  "engine-ml",
+  "engine-server",
+  "engine-wasm"
+]
+resolver = "2"

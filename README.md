@@ -102,57 +102,142 @@ Shows the core engine, multimodal layers, reasoning agents, and Builder Game int
 ---
 
 ### Directory structure
-```
+
 grove/
 ├── README.md
-│
-├── core/                          # Core reasoning + evidence modules
-│   ├── reasoning/                 # Structured reasoning modules
-│   │   ├── chains/                # Multi-step chains
-│   │   ├── planners/              # Task + experiment planners
-│   │   └── evaluators/            # Internal evaluators for reasoning quality
-│   │
-│   ├── simulation/                # Simulation tools + digital twin hooks
-│   │   ├── physics/               # Physics or diffusion processes
-│   │   ├── chemistry/             # Materials/chemistry sims
-│   │   └── workflows/             # Simulation workflow templates
-│   │
-│   └── evidence/                  # Evidence-based reasoning checks
-│       ├── validators/            # Math + ML validation scripts
-│       └── metrics/               # Evals, feedback, model diagnostics
-│
-├── engine/                        # IO Lab engine (“continuous discovery engine”)
-│   ├── pipelines/                 # Discovery pipelines (multi-hop exploration)
-│   ├── adapters/                  # Model adapters (LLMs, embeddings, tools)
-│   └── interfaces/                # Unified interfaces for tools + reasoning
-│
-├── builder_game/                  # Tests + applied scenarios (Phase 3)
-│   ├── scenarios/                 # Realistic & speculative research challenges
-│   ├── sims/                      # Simulation-powered gameplay
-│   └── evals/                     # How to score solutions + learning loops
-│
-├── platform/                      # User-facing + community modules
-│   ├── dashboard/                 # Interactive dashboard
-│   ├── tradeoff_visualizer/       # Exploration tradeoffs
-│   ├── literature/                # Triangulation, synthesis helpers
-│   └── export/                    # Lab notebook export, reports
-│
-├── apps/                          # Deployable apps (Vercel, notebooks, CLI)
-│   ├── web/                       # Web app (Next.js/Vercel)
-│   ├── cli/                       # Command line interface
-│   └── notebooks/                 # Exploratory notebooks
-│
-├── tests/
-│   ├── unit/                      # Unit tests
-│   ├── integration/               # Integration tests across modules
-│   └── evidence/                  # Evidence-based module test harness
-│
+├── LICENSE
+
+################################################################################
+# CORE REASONING + EVIDENCE ENGINE
+################################################################################
+├── core/
+│   ├── reasoning/                  # Multi-step reasoning, planners, chains
+│   │   ├── chains/                 # Reusable chain modules
+│   │   ├── planners/               # Hypothesis, experiment, task planners
+│   │   └── evaluators/             # Reasoning-level metrics
+
+│   ├── simulation/                 # Digital twin + physics/chem sims
+│   │   ├── physics/                # Wave, diffusion, FEM, MD, etc.
+│   │   ├── chemistry/              # Reaction modeling, force-fields
+│   │   └── workflows/              # Simulation workflows/templates
+
+│   └── evidence/                   # Validation + diagnostics
+│       ├── validators/             # Statistical/ML validators
+│       └── metrics/                # Metrics, diagnostics, scorecards
+
+
+################################################################################
+# AI ENGINE (Continuous Discovery Engine)
+################################################################################
+├── engine/
+│   ├── engine-core/                # Kernel: compute graph + primitives
+│   │   ├── src/
+│   │   │   ├── lib.rs
+│   │   │   └── compute/            # Wavefields, sieve, transforms, etc.
+│   │   └── Cargo.toml
+
+│   ├── engine-ml/                  # ML inference / adapters
+│   │   └── src/inference.rs
+
+│   ├── engine-server/              # Native Rust server (Axum/Actix)
+│   │   └── src/main.rs
+
+│   ├── engine-wasm/                # WASM interface for browser
+│   │   └── src/lib.rs
+
+│   ├── engine-mm/                  # Multimodal scaffolding layer
+│   ├── vision/                     # CLIP/EVA/vision encoders
+│   ├── sequences/                  # Sequence embeddings (primes, signals)
+│   ├── wavefields/                 # Wavefield encoders / solvers
+│   └── fusion/                     # Multimodal fuser / integrator
+
+
+################################################################################
+# EXPERIMENTS + PIPELINES
+################################################################################
+├── experiments/
+│   ├── pipelines/                  # End-to-end research pipelines
+│   │   ├── triggers/               # Auto-run triggers (events, commits)
+│   │   └── results/                # Aggregated results
+│   └── 2025-11-wafefield-sieve/    # Example timestamped experiment
+│       ├── README.md
+│       ├── code/                   # Scripts calling engine-core/server
+│       └── data/                   # Outputs (Git LFS recommended)
+
+
+################################################################################
+# SIMULATIONS + DIGITAL TWIN ENVIRONMENT
+################################################################################
+├── simulations/
+│   └── digital-twin/
+│       ├── config.yaml
+│       ├── simulator/
+│       └── docs/
+
+
+################################################################################
+# BUILDER GAME (Learning & Experiment Sandbox)
+################################################################################
+├── builder_game/
+│   ├── scenarios/                  # Playable scientific scenarios
+│   ├── sims/                       # Physics-driven gameplay
+│   └── evals/                      # Feedback loops & scoring
+
+
+################################################################################
+# PLATFORM (Dashboard, Triangulation, Visualization)
+################################################################################
+├── platform/
+│   ├── dashboard/                  # Web UI modules
+│   ├── tradeoff_visualizer/        # Frontier mapping
+│   ├── literature/                 # Literature triangulation engine
+│   └── export/                     # Notebook/PDF report generation
+
+
+################################################################################
+# APPLICATIONS (User Interfaces)
+################################################################################
+├── apps/
+│   ├── web/                        # Next.js app (Vercel)
+│   ├── cli/                        # Rust CLI wrapper for engine
+│   └── notebooks/                  # Python notebooks for exploration
+
+
+################################################################################
+# TOOLING, TESTS, DOCS
+################################################################################
 ├── scripts/
-│   ├── deploy/                    # GitHub → Vercel pipeline
-│   └── automation/                # Auto-evals, ci/cd checks
-│
-└── docs/
-    ├── architecture/              # Diagrams (flows, phases, engine)
-    ├── modules/                   # Specs for each module
-    └── roadmap/                   # Project phases
-```
+│   ├── deploy/                     # Deployment helpers
+│   └── automation/                 # Cron, batch jobs
+
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── evidence/                   # Evidence-driven tests
+
+├── docs/
+│   ├── architecture/               # Kernel/engine/system diagrams
+│   ├── modules/                    # Specs for each subsystem
+│   └── roadmap/                    # Hackathon phases, milestones
+
+
+################################################################################
+# WEB / FRONTEND ROOTS
+################################################################################
+├── assets/                         # Shared static assets (svg, models, etc.)
+├── lib/                            # Shared TS utilities
+├── components/                     # React components
+├── pages/                          # Next.js pages
+├── public/                         # Static files
+├── styles/                         # Global CSS/Tailwind
+├── config/                         # Env configs
+
+
+################################################################################
+# ENVIRONMENT & BUILD
+################################################################################
+├── environment.yml
+├── requirements.txt
+├── Dockerfile
+├── Makefile
+└── .github/                        # CI/CD

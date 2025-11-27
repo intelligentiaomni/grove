@@ -1,0 +1,9 @@
+[package]
+name = "engine-ml"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+# `ort` optional - commented so CI won't break unless user installs native runtime.
+# ort = "2"

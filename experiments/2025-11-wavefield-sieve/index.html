@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wavefield Sieve — Three.js Demo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="ui">
+<div class="row">
+<label>Numbers (N)</label>
+<input id="inputN" type="number" value="1024" min="64" step="64">
+</div>
+<div class="row">
+<label>Primes cap</label>
+<input id="inputPrimeCap" type="number" value="128" min="8" max="512" step="8">
+</div>
+<div class="row">
+<label>Seconds / prime</label>
+<input id="inputStep" type="number" value="0.55" step="0.05" min="0.05">
+</div>
+<div class="row">
+<button id="btnRestart">Restart</button>
+<button id="btnSpeed">Speed x2</button>
+</div>
+<div class="legend">Tip: Resize the window to change rendering resolution.</div>
+</div>
+<canvas id="glcanvas"></canvas>
+
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
