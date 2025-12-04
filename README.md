@@ -1,3 +1,6 @@
+[![Sponsor GROVE](https://img.shields.io/badge/Sponsor-IntelligentiaOmni-green?style=flat-square)](https://github.com/sponsors/intelligentiaomni)
+
+
 ## GROVE a UNIX for AI-Augmented Scientific Discovery
 
 A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity. 
@@ -87,6 +90,16 @@ Builder Game becomes an asset for experimentation and conceptual testing.
 * Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.<br>
 * Conducts the next major science paradigm.<br>
 * Multiplies creativity, knowledge, and insight.<br>
+
+---
+
+### Support GROVE
+
+GROVE is open-source and community-driven.  
+You can support sustainable research and development at:
+
+**GitHub Sponsors:** https://github.com/sponsors/intelligentiaomni  
+**PayPal (legacy):** https://paypal.me/principia-lab
 
 ---
 
