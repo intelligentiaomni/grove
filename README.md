@@ -1,6 +1,6 @@
 ## GROVE a UNIX for AI-Augmented Scientific Discovery
 
-A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity.
+A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity. 
 
 This is how we build the next era of R&D Labs.<br>
 This is how we leverage frontier science.<br>
@@ -9,7 +9,7 @@ This is how we push civilization forward.<br>
 ---
 ## TL;DR
 
-**GROVE** is a **scientific operating system**, a **reasoning engine**, and a **continuous discovery platform**, to progress science via predictable output: insights, discoveries, optimized designs, validated experiments, or decisions. It's built from first principles of AI and human collaboration, integrated in an architecture that is intentionally generalizable and future-facing, signaling a path toward **autonomous, evidence-driven, multimodal scientific research**.
+**GROVE** is a **scientific operating system**, a **reasoning engine**, and a **continuous discovery platform**, to progress science via predictable output: insights, discoveries, optimized designs, validated experiments, and decisions. It's built from first principles of AI and human collaboration, integrated in an architecture that is intentionally generalizable and future-facing, signaling a path toward **autonomous, computationally evidence-driven, AI-native modality unification**. GROVE fuses text, data, code, and simulations into a unified reasoning workflow today, with future arcs toward joint embeddings and fully automated simulation↔language loops.
 
 ---
 
