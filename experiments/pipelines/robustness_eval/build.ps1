@@ -1,17 +1,12 @@
 # ========================================
 # build.ps1 — Grove PDF + Snapshot Lock
-# Incremental-safe PDF + Figures with Force Rebuild + Old Results Cleanup
+# Incremental-safe PDF + Force Rebuild + Old Results Cleanup
+# Safe Move-Item for snapshots
 # ========================================
 
 param(
     [switch]$ForceRebuild  # Use -ForceRebuild to regenerate all PDFs and SVGs
 )
-
-# ---------------------------------------
-# Configuration
-# ---------------------------------------
-$MaxSnapshots = 5  # Keep only the last 5 snapshot folders
-$ResultsDir   = Join-Path $ProjectRoot "results"
 
 # ---------------------------------------
 # Resolve Script Directory & Git Root
@@ -33,6 +28,12 @@ if ($Dirty) {
     git status --short
     exit 1
 }
+
+# ---------------------------------------
+# Configuration
+# ---------------------------------------
+$MaxSnapshots = 5
+$ResultsDir   = Join-Path $ProjectRoot "results"
 
 # ---------------------------------------
 # Cleanup old snapshots
@@ -148,11 +149,20 @@ $CapsulePath = Join-Path $RunPath "capsule"
 $OutputsPath = Join-Path $RunPath "outputs"
 
 # Ensure directories exist
+New-Item -ItemType Directory -Path $RunPath -Force | Out-Null
 New-Item -ItemType Directory -Path $CapsulePath -Force | Out-Null
 New-Item -ItemType Directory -Path $OutputsPath -Force | Out-Null
 
-# Move temporary outputs into final snapshot folder
-Move-Item -Path (Join-Path $TempRunPath "*") -Destination $RunPath -Force
+# ---------------------------------------
+# Move temporary outputs into final snapshot folder safely
+# ---------------------------------------
+Get-ChildItem -Path $TempRunPath -Force | ForEach-Object {
+    $dest = Join-Path $RunPath $_.Name
+    if (Test-Path $dest) {
+        Remove-Item -Recurse -Force $dest
+    }
+    Move-Item $_.FullName $RunPath
+}
 
 # ---------------------------------------
 # Capture Git Provenance

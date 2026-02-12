@@ -121,122 +121,147 @@ grove/
 ├── LICENSE
 
 ################################################################################
-# CORE REASONING + EVIDENCE ENGINE
+# CORE REASONING + EVIDENCE ENGINE  
 ################################################################################
-├── core/
+
+├── core/			    
 │   ├── reasoning/                  # Multi-step reasoning, planners, chains
 │   │   ├── chains/                 # Reusable chain modules
 │   │   ├── planners/               # Hypothesis, experiment, task planners
 │   │   └── evaluators/             # Reasoning-level metrics
-
 │   ├── simulation/                 # Digital twin + physics/chem sims
 │   │   ├── physics/                # Wave, diffusion, FEM, MD, etc.
 │   │   ├── chemistry/              # Reaction modeling, force-fields
 │   │   └── workflows/              # Simulation workflows/templates
-
-│   └── evidence/                   # Validation + diagnostics
-│       ├── validators/             # Statistical/ML validators
-│       └── metrics/                # Metrics, diagnostics, scorecards
-
+│   └── evidence/                   # Validation + diagnostics    
+│       ├── metrics/                # Metrics, diagnostics, scorecards
+│       │   ├── robustness_auc.py
+│ 	    │   └── robustness_mae.py     
+│       └── validators/             # Statistical/ML validators
+│           ├── robustness.py
+│           └── threshold_crossing.py
+├── __init__.py
 
 ################################################################################
 # AI ENGINE (Continuous Discovery Engine)
 ################################################################################
+
 ├── engine/
 │   ├── engine-core/                # Kernel: compute graph + primitives
 │   │   ├── src/
 │   │   │   ├── lib.rs
 │   │   │   └── compute/            # Wavefields, sieve, transforms, etc.
 │   │   └── Cargo.toml
-
 │   ├── engine-ml/                  # ML inference / adapters
 │   │   └── src/inference.rs
-
 │   ├── engine-server/              # Native Rust server (Axum/Actix)
 │   │   └── src/main.rs
-
 │   ├── engine-wasm/                # WASM interface for browser
 │   │   └── src/lib.rs
-
 │   ├── engine-mm/                  # Multimodal scaffolding layer
 │   ├── vision/                     # CLIP/EVA/vision encoders
 │   ├── sequences/                  # Sequence embeddings (primes, signals)
 │   ├── wavefields/                 # Wavefield encoders / solvers
 │   └── fusion/                     # Multimodal fuser / integrator
 
+################################################################################
+# EXPERIMENTS + PIPELINES 	    
+################################################################################
 
-################################################################################
-# EXPERIMENTS + PIPELINES
-################################################################################
 ├── experiments/
-│   ├── pipelines/                  # End-to-end research pipelines
-│   │   ├── triggers/               # Auto-run triggers (events, commits)
-│   │   └── results/                # Aggregated results
-│   └── 2025-11-wafefield-sieve/    # Example timestamped experiment
-│       ├── README.md
-│       ├── code/                   # Scripts calling engine-core/server
-│       └── data/                   # Outputs (Git LFS recommended)
-
+│   ├── 2025-11-rothko-wasm
+│   ├── 2025-11-wavefield-sieve     # Example timestamped experiment
+│   │   ├── code/                   # Scripts calling engine-core/server
+│   │   └── data/                   # Outputs (Git LFS recommended)
+│   └── pipelines/                  # End-to-end research pipelines
+│       ├── results/                # Aggregated results
+│       └── robustness_eval/
+│           ├── capsule/	    
+│           │   ├── config.yaml
+│           │   ├── environment.lock.yaml
+│           │   ├── commit.txt
+│           │   └── pipeline.yaml
+│           ├── hypotheses/
+│           ├── notebooks/
+│           │   ├── .ipynb_checkpoints
+│           │   └── robustness_analysis.ipynb
+│           ├── outputs/
+│           │   ├── figures/
+│           │   ├── metrics.json
+│           │   ├── report.pdf
+│           │   └── bibliography.bib
+│           ├── results/
+│           ├── src/
+│           │   ├── run.py
+│           │   └── analysis.py            
+│           ├── build.ps1
+│           ├── README.md       
+│           └── triggers/           # Auto-run triggers (events, commits)
+├─ syntheses/  
+├─ foundations/
+│  │  └── cybernetics.md
+│  └── meta/
+│      ├── agent.md            	    # Epistemic stance (v0.1)
+│      └── regression.md      	    # Guardrails against self-deception
 
 ################################################################################
 # SIMULATIONS + DIGITAL TWIN ENVIRONMENT
 ################################################################################
+
 ├── simulations/
 │   └── digital-twin/
 │       ├── config.yaml
 │       ├── simulator/
 │       └── docs/
 
-
 ################################################################################
 # BUILDER GAME (Learning & Experiment Sandbox)
 ################################################################################
+
 ├── builder_game/
 │   ├── scenarios/                  # Playable scientific scenarios
 │   ├── sims/                       # Physics-driven gameplay
 │   └── evals/                      # Feedback loops & scoring
 
-
 ################################################################################
 # PLATFORM (Dashboard, Triangulation, Visualization)
 ################################################################################
+
 ├── platform/
 │   ├── dashboard/                  # Web UI modules
 │   ├── tradeoff_visualizer/        # Frontier mapping
 │   ├── literature/                 # Literature triangulation engine
 │   └── export/                     # Notebook/PDF report generation
 
-
 ################################################################################
 # APPLICATIONS (User Interfaces)
 ################################################################################
+
 ├── apps/
 │   ├── web/                        # Next.js app (Vercel)
 │   ├── cli/                        # Rust CLI wrapper for engine
 │   └── notebooks/                  # Python notebooks for exploration
 
-
 ################################################################################
 # TOOLING, TESTS, DOCS
 ################################################################################
+
 ├── scripts/
 │   ├── deploy/                     # Deployment helpers
 │   └── automation/                 # Cron, batch jobs
-
 ├── tests/
 │   ├── unit/
 │   ├── integration/
 │   └── evidence/                   # Evidence-driven tests
-
 ├── docs/
 │   ├── architecture/               # Kernel/engine/system diagrams
 │   ├── modules/                    # Specs for each subsystem
 │   └── roadmap/                    # Hackathon phases, milestones
 
-
 ################################################################################
 # WEB / FRONTEND ROOTS
 ################################################################################
+
 ├── assets/                         # Shared static assets (svg, models, etc.)
 ├── lib/                            # Shared TS utilities
 ├── components/                     # React components
@@ -245,13 +270,13 @@ grove/
 ├── styles/                         # Global CSS/Tailwind
 ├── config/                         # Env configs
 
-
 ################################################################################
 # ENVIRONMENT & BUILD
 ################################################################################
-├── environment.yml
+
+├── environment.yaml
 ├── requirements.txt
-├── Dockerfile
+├── Cargo.toml
 ├── Makefile
 └── .github/                        # CI/CD
 ```
