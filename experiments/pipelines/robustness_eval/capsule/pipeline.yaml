@@ -1,4 +1,4 @@
-name: robustness-eval
+name: robustness_eval
 version: 0.1
 
 description: >
@@ -78,3 +78,26 @@ consumers:
   - platform.tradeoff_visualizer
   - export.report_generator
   - os.policy_layer
+
+# ---------------------------------------
+# Normalize pipeline name to match folder naming
+# ---------------------------------------
+$PipelineName = "robustness_eval"   # matches the 'name:' field in pipeline.yaml
+$ResultsBase  = Join-Path $ProjectRoot "experiments/pipelines/$PipelineName/results"
+
+# Create results folder if missing
+if (!(Test-Path $ResultsBase)) {
+    New-Item -ItemType Directory -Path $ResultsBase -Force | Out-Null
+}
+
+# Redirect pipeline outputs to normalized folder
+$PipelineOutputs = Join-Path $ResultsBase "example_run"
+if (!(Test-Path $PipelineOutputs)) {
+    New-Item -ItemType Directory -Path $PipelineOutputs -Force | Out-Null
+}
+
+# Update build variables to point to the normalized paths
+$OutputsTemp = $PipelineOutputs
+$FigDir      = Join-Path $PipelineOutputs "figures"
+
+Write-Host "Pipeline outputs redirected to: $PipelineOutputs"
