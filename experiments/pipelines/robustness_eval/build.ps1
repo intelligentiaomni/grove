@@ -1,70 +1,22 @@
-# build.ps1
-# PDF build with logging, numeric ordering, and SVG handling
+# ========================================
+# build.ps1 — Grove PDF + Snapshot Lock
+# Incremental-safe PDF + Figures with Force Rebuild + Old Results Cleanup
+# ========================================
 
-# Set folders
-$SrcDir = "src"
-$OutDir = "output"
-$LogDir = "logs"
-$FigDir = "figures"
-
-# Create directories if they don't exist
-foreach ($dir in @($OutDir, $LogDir)) {
-    if (!(Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
-}
-
-# Prepare log file
-$timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-$logFile = Join-Path $LogDir "build_$timestamp.log"
-Add-Content $logFile "PDF Build started at $(Get-Date)"
-
-# Optional: Convert SVG figures to PDF for LaTeX
-Get-ChildItem -Path $FigDir -Filter *.svg | ForEach-Object {
-    $svgFile = $_.FullName
-    $pdfFile = Join-Path $FigDir ($_.BaseName + ".pdf")
-    if (!(Test-Path $pdfFile)) {
-        # Requires Inkscape installed and in PATH
-        inkscape $svgFile --export-type=pdf --export-filename=$pdfFile
-        $entry = "[{0}] Converted SVG to PDF: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $pdfFile
-        Add-Content $logFile $entry
-        Write-Host $entry
-    }
-}
-
-# Process Markdown files in numeric order
-Get-ChildItem -Path $SrcDir -Filter *.md | Sort-Object Name | ForEach-Object {
-    $mdFile = $_.FullName
-    $pdfFile = Join-Path $OutDir ($_.BaseName + ".pdf")
-
-    # Build PDF via Pandoc + XeLaTeX
-    pandoc $mdFile `
-        --pdf-engine=xelatex `
-        --template=template.tex `
-        --bibliography=references.bib `
-        --citeproc `
-        --number-sections `
-        -o $pdfFile
-
-    # Log success
-    $entry = "[{0}] Built PDF: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $pdfFile
-    Add-Content $logFile $entry
-    Write-Host $entry
-}
-
-Add-Content $logFile "PDF Build finished at $(Get-Date)"
-Write-Host "All Markdown files processed. Log saved to $logFile"
-
-# =======================================
-# Grove Snapshot Lock (Clean Execution)
-# =======================================
+param(
+    [switch]$ForceRebuild  # Use -ForceRebuild to regenerate all PDFs and SVGs
+)
 
 # ---------------------------------------
-# Resolve Script Directory
+# Configuration
 # ---------------------------------------
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$MaxSnapshots = 5  # Keep only the last 5 snapshot folders
+$ResultsDir   = Join-Path $ProjectRoot "results"
 
 # ---------------------------------------
-# Get Git Repo Root (robust)
+# Resolve Script Directory & Git Root
 # ---------------------------------------
+$ScriptDir   = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = git rev-parse --show-toplevel 2>$null
 if (-not $ProjectRoot) {
     Write-Error "Not inside a Git repository. Exiting."
@@ -83,16 +35,124 @@ if ($Dirty) {
 }
 
 # ---------------------------------------
+# Cleanup old snapshots
+# ---------------------------------------
+if (Test-Path $ResultsDir) {
+    $oldSnapshots = Get-ChildItem -Path $ResultsDir -Directory | Sort-Object Name -Descending
+    if ($oldSnapshots.Count -gt $MaxSnapshots) {
+        $toRemove = $oldSnapshots[$MaxSnapshots..($oldSnapshots.Count - 1)]
+        foreach ($folder in $toRemove) {
+            Write-Host "Removing old snapshot folder: $($folder.FullName)"
+            Remove-Item -Recurse -Force $folder.FullName
+        }
+    }
+}
+
+# ---------------------------------------
+# Set Paths
+# ---------------------------------------
+$PipelineSrc   = Join-Path $ProjectRoot "experiments/pipelines/robustness_eval/src"
+$TempRunPath   = Join-Path $ScriptDir "results_temp"
+$OutputsTemp   = Join-Path $TempRunPath "outputs"
+$CapsuleTemp   = Join-Path $TempRunPath "capsule"
+$FigDir        = Join-Path $PipelineSrc "figures"
+
+$OutDir  = Join-Path $OutputsTemp "pdf"
+$LogDir  = Join-Path $OutputsTemp "logs"
+
+# ---------------------------------------
+# Clean previous temp folder if exists
+# ---------------------------------------
+if (Test-Path $TempRunPath) {
+    Write-Host "Cleaning previous temporary folder: $TempRunPath"
+    Remove-Item -Recurse -Force $TempRunPath
+}
+
+# Ensure directories exist
+foreach ($dir in @($OutDir, $LogDir, $CapsuleTemp)) {
+    New-Item -ItemType Directory -Path $dir -Force | Out-Null
+}
+
+# ---------------------------------------
+# Prepare log file
+# ---------------------------------------
+$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$logFile   = Join-Path $LogDir "build_$timestamp.log"
+Add-Content $logFile "PDF Build started at $(Get-Date)"
+Write-Host "PDF Build started at $(Get-Date)"
+
+# ---------------------------------------
+# Convert SVG figures to PDF (incremental or forced)
+# ---------------------------------------
+if (Test-Path $FigDir) {
+    Get-ChildItem -Path $FigDir -Filter *.svg | ForEach-Object {
+        $svgFile = $_.FullName
+        $pdfFile = Join-Path $FigDir ($_.BaseName + ".pdf")
+
+        if ($ForceRebuild -or !(Test-Path $pdfFile)) {
+            inkscape $svgFile --export-type=pdf --export-filename=$pdfFile
+            $entry = "[{0}] Converted SVG to PDF: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $pdfFile
+        } else {
+            $entry = "[{0}] Skipped existing PDF: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $pdfFile
+        }
+        Add-Content $logFile $entry
+        Write-Host $entry
+    }
+}
+
+# ---------------------------------------
+# Build PDFs from Markdown (incremental or forced)
+# ---------------------------------------
+Get-ChildItem -Path $PipelineSrc -Filter *.md | Sort-Object Name | ForEach-Object {
+    $mdFile  = $_.FullName
+    $pdfFile = Join-Path $OutDir ($_.BaseName + ".pdf")
+
+    if ($ForceRebuild -or !(Test-Path $pdfFile)) {
+        pandoc $mdFile `
+            --pdf-engine=xelatex `
+            --template=template.tex `
+            --bibliography=references.bib `
+            --citeproc `
+            --number-sections `
+            -o $pdfFile
+
+        $entry = "[{0}] Built PDF: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $pdfFile
+    } else {
+        $entry = "[{0}] Skipped existing PDF: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $pdfFile
+    }
+    Add-Content $logFile $entry
+    Write-Host $entry
+}
+
+Add-Content $logFile "PDF Build finished at $(Get-Date)"
+Write-Host "All Markdown files processed. Log saved to $logFile"
+
+# ---------------------------------------
+# Run pipeline.py
+# ---------------------------------------
+$RunLog = Join-Path $LogDir "pipeline_$timestamp.log"
+
+if (-not (Test-Path (Join-Path $PipelineSrc "run.py"))) {
+    Write-Error "Pipeline run.py not found at $PipelineSrc. Cannot run pipeline."
+    exit 1
+}
+
+Write-Host "Running pipeline..."
+python (Join-Path $PipelineSrc "run.py") --output $OutputsTemp 2>&1 | Tee-Object $RunLog
+
+# ---------------------------------------
 # Create Timestamped Snapshot Folder
 # ---------------------------------------
-$Timestamp   = Get-Date -Format "yyyyMMdd-HHmmss"
-$RunPath     = Join-Path $ScriptDir "results\$Timestamp"
+$RunPath     = Join-Path $ProjectRoot ("results\$timestamp")
 $CapsulePath = Join-Path $RunPath "capsule"
 $OutputsPath = Join-Path $RunPath "outputs"
 
 # Ensure directories exist
 New-Item -ItemType Directory -Path $CapsulePath -Force | Out-Null
 New-Item -ItemType Directory -Path $OutputsPath -Force | Out-Null
+
+# Move temporary outputs into final snapshot folder
+Move-Item -Path (Join-Path $TempRunPath "*") -Destination $RunPath -Force
 
 # ---------------------------------------
 # Capture Git Provenance
@@ -109,7 +169,7 @@ pip freeze | Out-File (Join-Path $CapsulePath "environment.lock.txt") -Encoding 
 # ---------------------------------------
 # Copy Pipeline Config
 # ---------------------------------------
-$PipelineConfig = Join-Path $ScriptDir "pipeline.yaml"
+$PipelineConfig = Join-Path $ProjectRoot "experiments/pipelines/robustness_eval/pipeline.yaml"
 if (Test-Path $PipelineConfig) {
     Copy-Item $PipelineConfig $CapsulePath
 } else {
@@ -117,50 +177,31 @@ if (Test-Path $PipelineConfig) {
 }
 
 # ---------------------------------------
-# Run Pipeline
-# ---------------------------------------
-$RunLog = Join-Path $RunPath "run.log"
-
-Write-Host "Running pipeline..."
-python "$ScriptDir/src/run.py" --output $OutputsPath 2>&1 | Tee-Object $RunLog
-
-Write-Host "Snapshot created at: $RunPath"
-
-# ---------------------------------------
 # Generate Cryptographic Manifest
 # ---------------------------------------
-
 Write-Host "Generating snapshot manifest..."
 
 $ManifestPath = Join-Path $CapsulePath "manifest.json"
-
-# Collect commit again for redundancy
-$CommitHash = git rev-parse HEAD
-
-# Gather all output files
-$OutputFiles = Get-ChildItem -Path $OutputsPath -Recurse -File
+$CommitHash   = git rev-parse HEAD
+$OutputFiles  = Get-ChildItem -Path $OutputsPath -Recurse -File
 
 $FileHashes = @()
-
 foreach ($File in $OutputFiles) {
     $Hash = Get-FileHash -Path $File.FullName -Algorithm SHA256
     $RelativePath = $File.FullName.Substring($RunPath.Length + 1)
-
     $FileHashes += [PSCustomObject]@{
-        file  = $RelativePath
+        file   = $RelativePath
         sha256 = $Hash.Hash
     }
 }
 
-# Build manifest object
 $Manifest = [PSCustomObject]@{
-    timestamp = $Timestamp
-    commit    = $CommitHash
+    timestamp  = $timestamp
+    commit     = $CommitHash
     file_count = $FileHashes.Count
-    files     = $FileHashes
+    files      = $FileHashes
 }
 
-# Write manifest as JSON
 $Manifest | ConvertTo-Json -Depth 5 | Out-File $ManifestPath -Encoding utf8
-
 Write-Host "Manifest written to $ManifestPath"
+Write-Host "Snapshot created at: $RunPath"
