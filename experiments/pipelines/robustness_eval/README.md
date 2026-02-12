@@ -1,0 +1,1 @@
+This pipeline externalizes robustness assumptions into pipeline.yaml to make epistemic constraints explicit and reviewable.

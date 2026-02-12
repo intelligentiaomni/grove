@@ -1,0 +1,80 @@
+name: robustness-eval
+version: 0.1
+
+description: >
+  Evaluates ML model robustness under controlled data perturbations
+  (missingness and noise) to identify operational failure thresholds.
+  Produces evidence artifacts for Grove’s validation and OS layers.
+
+task:
+  category: model_validation
+  paradigm: supervised_ml
+  objectives:
+    - robustness_assessment
+    - threshold_detection
+    - epistemic_validation
+
+inputs:
+  dataset:
+    type: tabular
+    source: local | synthetic | external
+  model:
+    type: sklearn_estimator
+    variants:
+      - dummy
+      - linear
+      - tree_based
+
+perturbations:
+  missingness:
+    type: feature_dropout
+    rates: [0.0, 0.1, 0.2, 0.3, 0.4]
+  noise:
+    type: gaussian
+    levels: [0.0, 0.05, 0.1]
+
+evaluation:
+  cross_validation:
+    folds: 5
+    stratified: true
+  metrics:
+    classification:
+      primary: roc_auc
+      secondary: [accuracy]
+    regression:
+      primary: mae
+      secondary: [rmse]
+
+thresholds:
+  classification:
+    roc_auc_min: 0.75
+  regression:
+    mae_max: 10.0
+
+outputs:
+  artifacts:
+    - metrics.json
+    - threshold_crossings.json
+    - robustness_surface.svg
+  destinations:
+    - experiments/pipelines/robustness-eval/results/
+    - platform/dashboard/robustness/
+
+evidence:
+  validators:
+    - core.evidence.validators.robustness
+    - core.evidence.validators.threshold_crossing
+  metrics:
+    - core.evidence.metrics.robustness_auc
+    - core.evidence.metrics.robustness_mae
+
+provenance:
+  reproducible: true
+  random_seed: 42
+  timestamped_outputs: true
+
+consumers:
+  - platform.dashboard
+  - platform.tradeoff_visualizer
+  - export.report_generator
+  - os.policy_layer
