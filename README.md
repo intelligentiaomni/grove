@@ -121,18 +121,44 @@ grove/
 ├── LICENSE
 
 ################################################################################
-# CORE REASONING + EVIDENCE ENGINE  
+# CORE (Reasoning + Evidence)
 ################################################################################
 
-├── core/			    
+├── core/
+│   ├── extractor/		        # The selection pressure
+│   │   ├── extractor.py	   
+│   │   ├── mutation.py	
+│   │   ├── novelty.py	
+│   │   ├── population.py
+│   │   ├── scoring.py
+│   │   └── selection.py
+│   ├── insight/	            # Prevents intellectual self-deception
+│   │   ├── adaptive_control.py
+│   │   ├── effective_action.py
+│   │   ├── decisions.py
+│   │   ├── metrics.py
+│   │   ├── predictions.py
+│   │   ├── regulatory_adequacy.py 
+│   │   ├── structural_variety.py 
+│   │   └── epistemic_viability.py
+│   ├── theory/
+│   │   ├── stabilization.py
+│   │   └── compression.py
+│   ├── storage/
+│   │   ├── interface.py
+│   │   ├── filesystem_store.py
+│   │   ├── sqlite_store.py
+│   │   ├── vector_store.py
 │   ├── reasoning/                  # Multi-step reasoning, planners, chains
 │   │   ├── chains/                 # Reusable chain modules
 │   │   ├── planners/               # Hypothesis, experiment, task planners
 │   │   └── evaluators/             # Reasoning-level metrics
-│   ├── simulation/                 # Digital twin + physics/chem sims
+│   ├── simulator/                  # Digital twin + physics/chem sims
 │   │   ├── physics/                # Wave, diffusion, FEM, MD, etc.
 │   │   ├── chemistry/              # Reaction modeling, force-fields
 │   │   └── workflows/              # Simulation workflows/templates
+│   ├── tradeoff_visualizer/        # Frontier mapping
+│   ├── literature_triangulation/   # Literature triangulation engine 
 │   └── evidence/                   # Validation + diagnostics    
 │       ├── metrics/                # Metrics, diagnostics, scorecards
 │       │   ├── robustness_auc.py
@@ -163,6 +189,14 @@ grove/
 │   ├── sequences/                  # Sequence embeddings (primes, signals)
 │   ├── wavefields/                 # Wavefield encoders / solvers
 │   └── fusion/                     # Multimodal fuser / integrator
+
+################################################################################
+# DATA (State)
+################################################################################
+
+├── RAM
+├── logs
+├── theory
 
 ################################################################################
 # EXPERIMENTS + PIPELINES 	    
@@ -199,10 +233,10 @@ grove/
 │           └── triggers/           # Auto-run triggers (events, commits)
 ├─ syntheses/  
 ├─ foundations/
-│  │  └── cybernetics.md
-│  └── meta/
-│      ├── agent.md            	    # Epistemic stance (v0.1)
-│      └── regression.md      	    # Guardrails against self-deception
+│  │  └─ cybernetics.md
+│  └─ meta/
+│     ├─ agent.md            	    # Epistemic stance (v0.1)
+│     └─ regression.md      	    # Guardrails against self-deception
 
 ################################################################################
 # SIMULATIONS + DIGITAL TWIN ENVIRONMENT
@@ -224,14 +258,14 @@ grove/
 │   └── evals/                      # Feedback loops & scoring
 
 ################################################################################
-# PLATFORM (Dashboard, Triangulation, Visualization)
+# PLATFORM 
 ################################################################################
 
 ├── platform/
-│   ├── dashboard/                  # Web UI modules
-│   ├── tradeoff_visualizer/        # Frontier mapping
-│   ├── literature/                 # Literature triangulation engine
-│   └── export/                     # Notebook/PDF report generation
+│   ├── api/	                    
+│   ├── dashboard/                  # Web UI modules 
+│   ├── auth/                 
+│   └── sync/                     
 
 ################################################################################
 # APPLICATIONS (User Interfaces)
@@ -239,11 +273,10 @@ grove/
 
 ├── apps/
 │   ├── web/                        # Next.js app (Vercel)
-│   ├── cli/                        # Rust CLI wrapper for engine
-│   └── notebooks/                  # Python notebooks for exploration
+│   └── cli/                        # Rust CLI wrapper for engine
 
 ################################################################################
-# TOOLING, TESTS, DOCS
+# SCRIPTS, TESTS, DOCS
 ################################################################################
 
 ├── scripts/
@@ -259,7 +292,7 @@ grove/
 │   └── roadmap/                    # Hackathon phases, milestones
 
 ################################################################################
-# WEB / FRONTEND ROOTS
+# WEB / FRONTEND 
 ################################################################################
 
 ├── assets/                         # Shared static assets (svg, models, etc.)
@@ -271,12 +304,20 @@ grove/
 ├── config/                         # Env configs
 
 ################################################################################
-# ENVIRONMENT & BUILD
+# ENVIRONMENT (Runtime config)
 ################################################################################
 
-├── environment.yaml
-├── requirements.txt
-├── Cargo.toml
-├── Makefile
-└── .github/                        # CI/CD
+├── environment/
+│   ├── config.yaml
+│   ├── model_settings.yaml
+│   └── thresholds.yaml    
+
+################################################################################
+# BUILD (Packaging & orchestration)
+################################################################################
+
+├── build
+│   ├── cli.py
+│   ├── run_cycle.py
+│   └── dockerfile    
 ```
