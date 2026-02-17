@@ -124,14 +124,14 @@ grove/
 # CORE (Reasoning + Evidence)
 ################################################################################
 ├── core/
-│   ├── extractor/		    # Selection pressure, population dynamics
+│   ├── extractor/		            # Selection pressure, population dynamics
 │   │   ├── extractor.py	    
 │   │   ├── mutation.py	
 │   │   ├── novelty.py	
 │   │   ├── population.py
 │   │   ├── scoring.py
 │   │   └── selection.py
-│   ├── insight/	            # Avoid self-deception
+│   ├── insight/	                # Avoid self-deception
 │   │   ├── adaptive_control.py
 │   │   ├── effective_action.py
 │   │   ├── decisions.py
@@ -158,7 +158,7 @@ grove/
 │   └── evidence/                   # Validation + metrics    
 │       ├── metrics/                
 │       │   ├── robustness_auc.py
-│ 	│   └── robustness_mae.py     
+│ 	    │   └── robustness_mae.py     
 │       └── validators/             # Statistical/ML validators
 │           ├── robustness.py
 │           └── threshold_crossing.py
@@ -188,9 +188,9 @@ grove/
 # FORMAL THEORY (Axioms / Laws)
 ################################################################################
 ├── theory/               
-│   ├── formalism.md      # Fragment definition, operators, invariants
+│   ├── formalism.md                # Fragment definition, operators, invariants
 │   ├── invariants.md
-│   └── robustness.md     # Perturbation & evaluation laws
+│   └── robustness.md               # Perturbation & evaluation laws
 
 ################################################################################
 # FOUNDATIONS (Conceptual / Philosophical)
@@ -205,9 +205,9 @@ grove/
 # DATA (State / Runtime)
 ################################################################################
 ├── data/
-│   ├── RAM/              # Ephemeral runtime storage
-│   ├── logs/             # Audit & reproducibility
-│   └── fragments.json    # Serialized fragment population
+│   ├── RAM/                        # Ephemeral runtime storage
+│   ├── logs/                       # Audit & reproducibility
+│   └── fragments.json              # Serialized fragment population
 
 ################################################################################
 # EXPERIMENTS + PIPELINES 	    
