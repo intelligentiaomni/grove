@@ -123,16 +123,15 @@ grove/
 ################################################################################
 # CORE (Reasoning + Evidence)
 ################################################################################
-
 ├── core/
-│   ├── extractor/		            # The selection pressure
-│   │   ├── extractor.py	   
+│   ├── extractor/		    # Selection pressure, population dynamics
+│   │   ├── extractor.py	    
 │   │   ├── mutation.py	
 │   │   ├── novelty.py	
 │   │   ├── population.py
 │   │   ├── scoring.py
 │   │   └── selection.py
-│   ├── insight/	                # Prevents intellectual self-deception
+│   ├── insight/	            # Avoid self-deception
 │   │   ├── adaptive_control.py
 │   │   ├── effective_action.py
 │   │   ├── decisions.py
@@ -141,7 +140,7 @@ grove/
 │   │   ├── regulatory_adequacy.py 
 │   │   ├── structural_variety.py 
 │   │   └── epistemic_viability.py
-│   ├── theory/
+│   ├── operators/                  # Mutation, compression, stabilization, etc.
 │   │   ├── stabilization.py
 │   │   └── compression.py
 │   ├── storage/
@@ -149,29 +148,24 @@ grove/
 │   │   ├── filesystem_store.py
 │   │   ├── sqlite_store.py
 │   │   ├── vector_store.py
-│   ├── reasoning/                  # Multi-step reasoning, planners, chains
+│   ├── reasoning/                  # Multi-step reasoning
 │   │   ├── chains/                 # Reusable chain modules
 │   │   ├── planners/               # Hypothesis, experiment, task planners
 │   │   └── evaluators/             # Reasoning-level metrics
-│   ├── simulator/                  # Digital twin + physics/chem sims
-│   │   ├── physics/                # Wave, diffusion, FEM, MD, etc.
-│   │   ├── chemistry/              # Reaction modeling, force-fields
-│   │   └── workflows/              # Simulation workflows/templates
+│   ├── simulator/                  # Digital twin
 │   ├── tradeoff_visualizer/        # Frontier mapping
-│   ├── literature_triangulation/   # Literature triangulation engine 
-│   └── evidence/                   # Validation + diagnostics    
-│       ├── metrics/                # Metrics, diagnostics, scorecards
+│   ├── literature_triangulation/    
+│   └── evidence/                   # Validation + metrics    
+│       ├── metrics/                
 │       │   ├── robustness_auc.py
-│ 	    │   └── robustness_mae.py     
+│ 	│   └── robustness_mae.py     
 │       └── validators/             # Statistical/ML validators
 │           ├── robustness.py
 │           └── threshold_crossing.py
-├── __init__.py
 
 ################################################################################
 # AI ENGINE (Continuous Discovery Engine)
 ################################################################################
-
 ├── engine/
 │   ├── engine-core/                # Kernel: compute graph + primitives
 │   │   ├── src/
@@ -191,34 +185,48 @@ grove/
 │   └── fusion/                     # Multimodal fuser / integrator
 
 ################################################################################
-# DATA (State)
+# FORMAL THEORY (Axioms / Laws)
 ################################################################################
+├── theory/               
+│   ├── formalism.md      # Fragment definition, operators, invariants
+│   ├── invariants.md
+│   └── robustness.md     # Perturbation & evaluation laws
 
-├── RAM
-├── logs
-├── theory
+################################################################################
+# FOUNDATIONS (Conceptual / Philosophical)
+################################################################################
+├── foundations/
+│   ├── cybernetics.md
+│   └── meta/
+│       ├── agent.md
+│       └── regression.md
+
+################################################################################
+# DATA (State / Runtime)
+################################################################################
+├── data/
+│   ├── RAM/              # Ephemeral runtime storage
+│   ├── logs/             # Audit & reproducibility
+│   └── fragments.json    # Serialized fragment population
 
 ################################################################################
 # EXPERIMENTS + PIPELINES 	    
 ################################################################################
-
 ├── experiments/
 │   ├── 2025-11-rothko-wasm
 │   ├── 2025-11-wavefield-sieve     # Example timestamped experiment
 │   │   ├── code/                   # Scripts calling engine-core/server
 │   │   └── data/                   # Outputs (Git LFS recommended)
 │   └── pipelines/                  # End-to-end research pipelines
-│       ├── results/                # Aggregated results
 │       └── robustness_eval/
 │           ├── capsule/	    
 │           │   ├── config.yaml
 │           │   ├── environment.lock.yaml
 │           │   ├── commit.txt
 │           │   └── pipeline.yaml
-│           ├── hypotheses/
 │           ├── notebooks/
-│           │   ├── .ipynb_checkpoints
-│           │   └── robustness_analysis.ipynb
+│           │    ├── .ipynb_checkpoints
+│           │    └── robustness_analysis.ipynb
 │           ├── outputs/
 │           │   ├── figures/
 │           │   ├── metrics.json
@@ -229,19 +237,11 @@ grove/
 │           │   ├── run.py
 │           │   └── analysis.py            
 │           ├── build.ps1
-│           ├── README.md       
-│           └── triggers/           # Auto-run triggers (events, commits)
-├─ syntheses/  
-├─ foundations/
-│  │  └─ cybernetics.md
-│  └─ meta/
-│     ├─ agent.md            	    # Epistemic stance (v0.1)
-│     └─ regression.md      	    # Guardrails against self-deception
+│           └── README.md     
 
 ################################################################################
-# SIMULATIONS + DIGITAL TWIN ENVIRONMENT
+# SIMULATIONS / DIGITAL TWIN 
 ################################################################################
-
 ├── simulations/
 │   └── digital-twin/
 │       ├── config.yaml
@@ -249,75 +249,28 @@ grove/
 │       └── docs/
 
 ################################################################################
-# BUILDER GAME (Learning & Experiment Sandbox)
+# BUILDER GAME (Sandbox / Learning)
 ################################################################################
-
 ├── builder_game/
 │   ├── scenarios/                  # Playable scientific scenarios
 │   ├── sims/                       # Physics-driven gameplay
 │   └── evals/                      # Feedback loops & scoring
 
 ################################################################################
-# PLATFORM 
+# PLATFORM / INTERFACES
 ################################################################################
-
 ├── platform/
-│   ├── api/	                    
-│   ├── dashboard/                  # Web UI modules 
-│   ├── auth/                 
-│   └── sync/                     
-
-################################################################################
-# APPLICATIONS (User Interfaces)
-################################################################################
-
 ├── apps/
-│   ├── web/                        # Next.js app (Vercel)
-│   └── cli/                        # Rust CLI wrapper for engine
-
-################################################################################
-# SCRIPTS, TESTS, DOCS
-################################################################################
-
 ├── scripts/
-│   ├── deploy/                     # Deployment helpers
-│   └── automation/                 # Cron, batch jobs
 ├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── evidence/                   # Evidence-driven tests
 ├── docs/
-│   ├── architecture/               # Kernel/engine/system diagrams
-│   ├── modules/                    # Specs for each subsystem
-│   └── roadmap/                    # Hackathon phases, milestones
-
-################################################################################
-# WEB / FRONTEND 
-################################################################################
-
-├── assets/                         # Shared static assets (svg, models, etc.)
-├── lib/                            # Shared TS utilities
-├── components/                     # React components
-├── pages/                          # Next.js pages
-├── public/                         # Static files
-├── styles/                         # Global CSS/Tailwind
-├── config/                         # Env configs
-
-################################################################################
-# ENVIRONMENT (Runtime config)
-################################################################################
-
+├── assets/
+├── lib/
+├── components/
+├── pages/
+├── public/
+├── styles/
+├── config/
 ├── environment/
-│   ├── config.yaml
-│   ├── model_settings.yaml
-│   └── thresholds.yaml    
-
-################################################################################
-# BUILD (Packaging & orchestration)
-################################################################################
-
-├── build
-│   ├── cli.py
-│   ├── run_cycle.py
-│   └── dockerfile    
+└── build/
 ```
