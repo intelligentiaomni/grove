@@ -125,14 +125,14 @@ grove/
 ################################################################################
 
 ├── core/
-│   ├── extractor/		        # The selection pressure
+│   ├── extractor/		            # The selection pressure
 │   │   ├── extractor.py	   
 │   │   ├── mutation.py	
 │   │   ├── novelty.py	
 │   │   ├── population.py
 │   │   ├── scoring.py
 │   │   └── selection.py
-│   ├── insight/	            # Prevents intellectual self-deception
+│   ├── insight/	                # Prevents intellectual self-deception
 │   │   ├── adaptive_control.py
 │   │   ├── effective_action.py
 │   │   ├── decisions.py
