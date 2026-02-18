@@ -1,0 +1,43 @@
+site_name: Grove
+site_description: Formal Computational Epistemology Engine
+site_author: IO Lab
+
+repo_url: https://github.com/intelligentiaomni/grove
+repo_name: grove
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.instant
+    - content.code.copy
+    - content.math
+  palette:
+    scheme: default
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - attr_list
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Overview: README.md
+  - Theory:
+      - Formalism: theory/formalism.md
+      - Invariants: theory/invariants.md
+      - Robustness: theory/robustness.md
+  - Foundations:
+      - Cybernetics: foundations/cybernetics.md
+      - Agent: foundations/meta/agent.md
+      - Regression: foundations/meta/regression.md
+  - Architecture:
+      - System Layout: docs/architecture/system.md
