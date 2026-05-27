@@ -1,4 +1,9 @@
 use anyhow::{bail, Context, Result};
+use axum::body::Bytes;
+use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
+use axum::routing::{get, post};
+use axum::{Json, Router};
 use chrono::Utc;
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::visit::Topo;
@@ -7,9 +12,83 @@ use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs;
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Command;
 use uuid::Uuid;
+
+pub mod hf_ingest;
+pub mod research_bus;
+pub mod viz_exporter;
+
+pub fn router() -> Router {
+    Router::new()
+        .route("/api/v1/epistemic/extract", post(extract_epistemic_graph))
+        .route(
+            "/api/v1/scientific/pipeline",
+            post(route_scientific_pipeline),
+        )
+        .route("/api/v1/hf/ingest", post(route_hf_ingest))
+        .route("/api/v1/viz/network-graph", get(network_graph_manifest))
+}
+
+async fn route_hf_ingest(Json(request): Json<hf_ingest::HfIngestRequest>) -> Response {
+    match hf_ingest::ingest_hf_dataset_into_lineage(request).await {
+        Ok(report) => Json(report).into_response(),
+        Err(err) => (
+            StatusCode::BAD_GATEWAY,
+            format!("hugging face ingest failed: {err}"),
+        )
+            .into_response(),
+    }
+}
+
+async fn route_scientific_pipeline(
+    Json(request): Json<engine_ml::ScientificPipelineRequest>,
+) -> Response {
+    let reasoner = engine_ml::HybridScientificReasoner::default();
+    let report = reasoner.validate(&request).await;
+    Json(report).into_response()
+}
+
+async fn network_graph_manifest() -> Response {
+    match viz_exporter::EmbeddedVisualizationExporter::default()
+        .export_network_graph("network-graph?embedded=true")
+    {
+        Ok(manifest) => Json(manifest).into_response(),
+        Err(err) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("visualization export failed: {err}"),
+        )
+            .into_response(),
+    }
+}
+
+async fn extract_epistemic_graph(payload: Bytes) -> Response {
+    match std::str::from_utf8(&payload) {
+        Ok(text) => {
+            let router = match engine_ml::DynamicInferenceRouter::from_env() {
+                Ok(router) => router,
+                Err(err) => {
+                    return (
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        format!("dynamic inference router initialization failed: {err}"),
+                    )
+                        .into_response();
+                }
+            };
+
+            match router.process_text_to_graph(text).await {
+                Ok(graph) => Json(graph).into_response(),
+                Err(err) => (
+                    StatusCode::BAD_GATEWAY,
+                    format!("epistemic extraction failed: {err}"),
+                )
+                    .into_response(),
+            }
+        }
+        Err(_) => (StatusCode::BAD_REQUEST, "request body must be valid UTF-8").into_response(),
+    }
+}
 
 /// Simple filesystem layout (under a root dir)
 /// registry/transforms/*.json
@@ -90,7 +169,9 @@ impl Kernel {
 
     /// Load state by hash
     pub fn load_state(&self, hash: &str) -> Result<serde_json::Value> {
-        let path = Path::new(STORAGE_ROOT).join("states").join(format!("{}.json", hash));
+        let path = Path::new(STORAGE_ROOT)
+            .join("states")
+            .join(format!("{}.json", hash));
         let b = fs::read(&path)
             .with_context(|| format!("state {} not found at {}", hash, path.display()))?;
         let v = serde_json::from_slice(&b)?;
@@ -111,11 +192,7 @@ impl Kernel {
 
     /// Naive execute_graph: takes a DAG defined by Node IDs and edges, executes transforms
     /// Assumption: each node has a single transform id and consumes outputs of predecessors as input merged as JSON.
-    pub fn execute_graph(
-        &self,
-        graph_spec: GraphSpec,
-        input_state_hash: &str,
-    ) -> Result<String> {
+    pub fn execute_graph(&self, graph_spec: GraphSpec, input_state_hash: &str) -> Result<String> {
         // load input state
         let mut state_inputs: HashMap<String, String> = HashMap::new();
         // map node name -> output state hash
@@ -129,9 +206,7 @@ impl Kernel {
             node_map.insert(node.name.clone(), idx);
         }
         for edge in &graph_spec.edges {
-            let a = node_map
-                .get(&edge.from)
-                .context("edge from unknown node")?;
+            let a = node_map.get(&edge.from).context("edge from unknown node")?;
             let b = node_map.get(&edge.to).context("edge to unknown node")?;
             graph.add_edge(*a, *b, ());
         }
@@ -142,7 +217,7 @@ impl Kernel {
 
         // store the original input under a pseudo node "__input"
         let root_input_hash = input_state_hash.to_string();
-        state_inputs.insert("__input".into(), root_input_hash);
+        state_inputs.insert("__input".into(), root_input_hash.clone());
 
         while let Some(nx) = topo.next(&graph) {
             let node_name = &graph[nx];
@@ -178,7 +253,8 @@ impl Kernel {
                 .find(|n| &n.name == node_name)
                 .context("node spec missing")?;
             let transform = self.load_transform(&node_spec.transform_id)?;
-            let (output_hash, trace) = self.run_transform_with_io(&transform, &input_hash, &exec_id)?;
+            let (output_hash, trace) =
+                self.run_transform_with_io(&transform, &input_hash, &exec_id)?;
 
             // write trace
             self.emit_trace(&trace)?;
@@ -274,8 +350,12 @@ impl Kernel {
         }
 
         // read output file
-        let output_bytes = fs::read(&output_file)
-            .with_context(|| format!("expected transform to write output at {}", output_file.display()))?;
+        let output_bytes = fs::read(&output_file).with_context(|| {
+            format!(
+                "expected transform to write output at {}",
+                output_file.display()
+            )
+        })?;
         let output_val: serde_json::Value = serde_json::from_slice(&output_bytes)?;
         let output_hash = self.persist_state(&output_val)?;
 
@@ -321,7 +401,14 @@ pub struct GraphSpec {
 }
 
 /// ---- Demo CLI / example usage ----
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
+    if std::env::var_os("ENGINE_SERVER_RUN_KERNEL_DEMO").is_none() {
+        let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+        axum::serve(listener, router()).await?;
+        return Ok(());
+    }
+
     // quick bootstrap
     let kernel = Kernel::new()?;
 
@@ -356,7 +443,10 @@ fn main() -> Result<()> {
 
     // Print summary for convenience
     let summary = kernel.load_state(&exec_summary_hash)?;
-    println!("Execution summary: {}", serde_json::to_string_pretty(&summary)?);
+    println!(
+        "Execution summary: {}",
+        serde_json::to_string_pretty(&summary)?
+    );
 
     Ok(())
 }

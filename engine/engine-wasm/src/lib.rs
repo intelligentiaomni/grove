@@ -1,6 +1,6 @@
-use wasm_bindgen::prelude::*;
 use engine_core::compute;
 use engine_core::compute::wave::Wavefield;
+use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(start)]
 pub fn start() {
@@ -100,4 +100,3 @@ impl WasmWavefield {
         self.inner.reset();
     }
 }
-

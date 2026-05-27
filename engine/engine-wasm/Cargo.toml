@@ -7,8 +7,6 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+console_error_panic_hook = "0.1"
 wasm-bindgen = "0.2"
 engine-core = { path = "../engine-core" }
-
-[dev-dependencies]
-console_error_panic_hook = "0.1"
