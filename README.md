@@ -1,276 +1,157 @@
-[![Sponsor GROVE](https://img.shields.io/badge/Sponsor-IntelligentiaOmni-green?style=flat-square)](https://github.com/sponsors/intelligentiaomni)
+<div align="center">
 
+<!-- Banner -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public\assets\visuals\information_topology_banner_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="public\assets\visuals\information_topology_banner_light.png">
+  <img alt="Engine System Banner" src="public\assets\visuals\information_topology_banner_light.png" style="max-width: 100%;">
+</picture>
 
-## GROVE a UNIX for AI-Augmented Scientific Discovery
+<!-- Badges -->
+<p align="center">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-passing-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0--alpha-blueviolet">
+</p>
 
-A unified scientific OS and reasoning engine to advance science. Transforming bottlenecked research processes into a high-leverage computational system, efficient workflows, and velocity. 
-
-This is how we build the next era of R&D Labs.<br>
-This is how we leverage frontier science.<br>
-This is how we push civilization forward.<br>
+</div>
 
 ---
+
+# Scientific Intelligence Substrate
+
+Grove is a high-concurrency, sovereign scientific discovery substrate engineered in Rust, leveraging computational infrastructure for resilient scientific organizations. This system executes literature triangulation, epistemic filtering, and data extraction over text payloads scaling up to 120,000 tokens while enabling data sovereignty via a bare-metal microkernel boundary.
+
+Research intelligence = structured graph + constrained execution + distributed routing + persistent traceability
+
 ## TL;DR
 
-**GROVE** is a **scientific operating system**, a **reasoning engine**, and a **continuous discovery platform**, to progress science via predictable output: insights, discoveries, optimized designs, validated experiments, and decisions. It's built from first principles of AI and human collaboration, integrated in an architecture that is intentionally generalizable and future-facing, signaling a path toward **autonomous, computationally evidence-driven, AI-native modality unification**. GROVE fuses text, data, code, and simulations into a unified reasoning workflow today, with future arcs toward joint embeddings and fully automated simulation↔language loops.
+A Rust-native scientific intelligence substrate for resilient, local-first research operations; The system combines asynchronous inference orchestration, graph-structured scientific memory, reproducible data pipelines, and minimized external data exposure model routing into a modular architecture for high-leverage research micro-teams. Integrating open-weight models, automated literature ingestion, and hybrid symbolic/neural workflows, the engine-core investigates how computational infrastructure can amplify scientific iteration speed while reducing institutional overhead and operational fragility.
 
----
+## Core Thesis
 
-## Scientific Architecture
+Massive scale breeds fragility; minimal footprint yields resilience.
 
-A full-stack open-source system that ties together reasoning, computation, visualization, simulations, and collaboration.
+Modern computation dramatically reduces the minimum viable scale required for advanced scientific operations. Open-weight models, cloud infrastructure, adaptive modular pipelines, and global scientific literature access enable research at more compressed scales, that previously required large institutional coordination layers. One strong systems architecture can amplify an entire organization. If a technical paradigm shifts, a micro-lab can rewrite its automated pipeline over a weekend.  
 
-* **Rust:** performance, deterministic orchestration, simulations, safety.
-* **Python:** ML runtime (PyTorch), data pipelines, embeddings, notebooks.
-* **TypeScript / Next.js:** dashboards, interaction layers, visualization.
-* **WASM / WebGPU:** real-time visualizations + browser-based simulation kernels.
-* **PyTorch:** training, fine-tuning, multimodal embeddings, differentiable modeling.
-* **ONNX** Runtime: portable deployment of models across Rust, Python, and browser.
-* **Git LFS** + datasets: versioned scientific and experimental assets.
-* **APIs** + agent endpoints: modular and extensible system commands.
-* Rust → WASM → Browser: compile simulation + inference into the UI.
+## Formalism
 
-### System-Level Goals
+The system is modeled as a retrieval-conditioned state transition system over a persistent graph-structured memory space, where execution evolves distributed state via graph-retrieved action policies and deterministic transition dynamics.
 
-* A **programmable, modular OS** for scientific reasoning.
-* Language-agnostic, composable toolkit for computational research.
-* Local or cloud execution pathways.
+## Systems Direction
 
----
+- Scientific intelligence substrate for structured knowledge representation and long-horizon reasoning.
+- Reproducibility as a first-class constraint across data ingestion, inference, and evaluation pipelines.
+- Local-first compute with tiered routing across on-device execution, cluster resources, and external model endpoints.
+- Hybrid symbolic–neural workflows integrating graph-based representations with learned models for inference and retrieval.
 
-## Continuous Discovery Engine
+## Architecture Topology
 
-Multimodal, evidence-driven AI pipelines, conducting continuously self-improving discovery feedback iterations.
+- **`engine-kernel`**: A `#![no_std]` Rust core (`x86_64-unknown-none`) implementing coroutine scheduling (`KernelFiber`) and lock-free message/correspondence channels (`KernelChannel`). Designed around capability-based isolation primitives and deterministic execution boundaries.
 
-* **Multimodal reasoning:** text, code, data, simulations, spatial, visual inputs.
-* **Hypothesis engine:** proposes, refines, compares research directions.
-* **Reproducibility:** every experiment logged, variantable, auditable.
-* **Evidence fusion:** literature, data streams, simulations, experiments.
-* **Tradeoff visualizer:** navigate multi-dimensional scientific spaces.
-* **Literature Triangulation:** conceptual, cross-disciplinary, multi-language extraction.   
-* **Foresight modules:** explore counterfactuals and plausible research pathways.
-* **R&D automations:** run iterative loops, generate experiment variants, evaluate.
-* **Cross-disciplinary generalization:** supports a wide range of scientific domains.
-* **Multi-team collaboration:** shared memory, syncing, real-time co-exploration.
+- **`engine-core`**: A typed research object registry defining structured scientific data contracts (`TopicNode`, `ResearchThreadObject`, `ScientificHypothesisNode`) with shared serialization semantics across native and `wasm32-unknown-unknown` targets.
 
-### Engine Goals
+- **`engine-ml`**: An inference routing and token-aware scheduling layer implementing BPE-based context accounting (`cl100k_base`), concurrent caching strategies (`DashMap`), and multi-tier execution routing across local and remote model endpoints.
 
-* Robust error analysis and uncertainty quantification. 
-* Fast, inexpensive *pre-validation* of scientific ideas.  
-* Cognitive-science-inspired hypothesis mapping.
+- **`engine-server`**: An event-driven Axum-based HTTP layer that streams and transforms external dataset shards (e.g., FineWeb-Edu, FinePDFs) into structured research artifacts and visualization outputs (D3.js, Obsidian-compatible Markdown).
 
----
+- **`engine-wasm`**: A browser-compatible execution target exposing a constrained subset of `engine-core` for interactive visualization, lightweight inference, and research graph exploration.
 
-### Long-term arc
+## Architecture Overview
 
-* Builds toward **generalized reasoning, automatic workflows + data-driven research automation**.
-
----
-
-## Testing, Simulations, Digital Twins
-
-Builder Game becomes an asset for experimentation and conceptual testing.
-
-* Rust compute kernels → Python embeddings → multimodal reasoning → UI fusion.
-* **Digital twins** of materials, processes, and scientific scenarios.
-* Test unconventional ideas in controlled virtual environments.
-
-### Purpose
-
-* Explore full scientific iterations end-to-end at research-grade depth.<br> 
-* Combine disparate features or data modalities.<br>
-* Examine how compute, time, complexity, or question-framing affects outcomes.<br>
-* Real-time multi-user collaboration and feedback loops.<br>
-* A portal into the “future lab” experience.<br>
-
----
-
-### Outcome
-
-* Lab becomes machine ⇾ predictable, continuous, and 100× more efficient.<br>
-* Conducts the next major science paradigm.<br>
-* Multiplies creativity, knowledge, and insight.<br>
-
----
-
-### Support GROVE
-
-GROVE is open-source and community-driven.  
-You can support sustainable research and development at:
-
-**GitHub Sponsors:** https://github.com/sponsors/intelligentiaomni  
-**PayPal (legacy):** https://paypal.me/principia-lab
-
----
-
-### Architecture Diagram
-
-Shows the core engine, multimodal layers, reasoning agents, and Builder Game integration.
-
-[Open Architecture Diagram (.mmd)](docs/architecture.mmd)
-
-
-![Architecture Diagram](docs/architecture.svg)
-
----
-
-### Directory structure
+```mermaid
+flowchart TD
+    %% =========================
+    %% Core System Boundary
+    %% =========================
+    User[Researcher / Agent / External Query]
+    subgraph Engine["Scientific Intelligence Substrate (engine)"]
+        direction TB
+        Kernel["engine-kernel\n(no_std, x86_64)\nCoroutine Scheduler\nCapability Isolation\nKernelChannel IPC"]
+        Core["engine-core\nResearch IR Layer\nTopicNode\nResearchThreadObject\nScientificHypothesisNode"]
+        ML["engine-ml\nInference Router\nToken Accounting (BPE)\nContext Budgeting\nDashMap Cache Layer"]
+        Server["engine-server\nAxum HTTP Runtime\nStreaming Ingestion\nDataset → Artifact Pipeline"]
+        WASM["engine-wasm\nBrowser Execution Target\nGraph Visualization\nLightweight Retrieval Layer"]
+    end
+    %% =========================
+    %% External Systems
+    %% =========================
+    Cloud["Remote Model Endpoints"]
+    Local["Local GPU Runtime"]
+    Datasets["External Corpora\n(FineWeb-Edu / FinePDFs)"]
+    Storage["Artifact Store\n(SQLite / Graph Logs)"]
+    %% =========================
+    %% Data / Control Flow
+    %% =========================
+    User --> Server
+    Server --> Core
+    Server --> ML
+    ML --> Local
+    ML --> Cloud
+    ML --> Core
+    Server --> Datasets
+    Datasets --> Server
+    Core --> Kernel
+    ML --> Kernel
+    Kernel --> Storage
+    Server --> Storage
+    Core --> WASM
+    Server --> WASM
+    WASM --> User
+    %% =========================
+    %% Feedback Loops
+    %% =========================
+    ML -->|Inference Results| Server
+    Server -->|Structured Artifacts| Core
+    Core -->|Graph State| WASM
+    WASM -->|Interaction Feedback| Server
 ```
-grove/
-├── README.md
-├── LICENSE
 
-################################################################################
-# CORE (Reasoning + Evidence)
-################################################################################
-├── core/
-│   ├── extractor/		            # Selection pressure, population dynamics
-│   │   ├── extractor.py	    
-│   │   ├── mutation.py	
-│   │   ├── novelty.py	
-│   │   ├── population.py
-│   │   ├── scoring.py
-│   │   └── selection.py
-│   ├── insight/	                # Avoid self-deception
-│   │   ├── adaptive_control.py
-│   │   ├── effective_action.py
-│   │   ├── decisions.py
-│   │   ├── metrics.py
-│   │   ├── predictions.py
-│   │   ├── regulatory_adequacy.py 
-│   │   ├── structural_variety.py 
-│   │   └── epistemic_viability.py
-│   ├── operators/                  # Mutation, compression, stabilization, etc.
-│   │   ├── stabilization.py
-│   │   └── compression.py
-│   ├── storage/
-│   │   ├── interface.py
-│   │   ├── filesystem_store.py
-│   │   ├── sqlite_store.py
-│   │   ├── vector_store.py
-│   ├── reasoning/                  # Multi-step reasoning
-│   │   ├── chains/                 # Reusable chain modules
-│   │   ├── planners/               # Hypothesis, experiment, task planners
-│   │   └── evaluators/             # Reasoning-level metrics
-│   ├── simulator/                  # Digital twin
-│   ├── tradeoff_visualizer/        # Frontier mapping
-│   ├── literature_triangulation/    
-│   └── evidence/                   # Validation + metrics    
-│       ├── metrics/                
-│       │   ├── robustness_auc.py
-│ 	    │   └── robustness_mae.py     
-│       └── validators/             # Statistical/ML validators
-│           ├── robustness.py
-│           └── threshold_crossing.py
 
-################################################################################
-# AI ENGINE (Continuous Discovery Engine)
-################################################################################
-├── engine/
-│   ├── engine-core/                # Kernel: compute graph + primitives
-│   │   ├── src/
-│   │   │   ├── lib.rs
-│   │   │   └── compute/            # Wavefields, sieve, transforms, etc.
-│   │   └── Cargo.toml
-│   ├── engine-ml/                  # ML inference / adapters
-│   │   └── src/inference.rs
-│   ├── engine-server/              # Native Rust server (Axum/Actix)
-│   │   └── src/main.rs
-│   ├── engine-wasm/                # WASM interface for browser
-│   │   └── src/lib.rs
-│   ├── engine-mm/                  # Multimodal scaffolding layer
-│   ├── vision/                     # CLIP/EVA/vision encoders
-│   ├── sequences/                  # Sequence embeddings (primes, signals)
-│   ├── wavefields/                 # Wavefield encoders / solvers
-│   └── fusion/                     # Multimodal fuser / integrator
+## Technical Specifications
 
-################################################################################
-# FORMAL THEORY (Axioms / Laws)
-################################################################################
-├── theory/               
-│   ├── formalism.md                # Fragment definition, operators, invariants
-│   ├── invariants.md
-│   └── robustness.md               # Perturbation & evaluation laws
+- **Bare-Metal Isolation:** engine-kernel compiles under strict x86_64-unknown-none with zero standard-library (no_std) dependencies. Enforces object-level capabilities and atomic snapshots at the system boundary.
 
-################################################################################
-# FOUNDATIONS (Conceptual / Philosophical)
-################################################################################
-├── foundations/
-│   ├── cybernetics.md
-│   └── meta/
-│       ├── agent.md
-│       └── regression.md
+- **Persistent Research State:** Operates via structured asynchronous coroutines (Research Threads) that manage execution context, inference traces, and iterative reasoning steps across long-horizon execution context loops.
 
-################################################################################
-# DATA (State / Runtime)
-################################################################################
-├── data/
-│   ├── RAM/                        # Ephemeral runtime storage
-│   ├── logs/                       # Audit & reproducibility
-│   └── fragments.json              # Serialized fragment population
+- **Dynamic Inference Routing:** Automated gateway (engine-ml/src/dynamic_router.rs) audits payload sizes using native tiktoken-rs cl100k_base() BPE token counting. Payload execution routing paths map directly to:
 
-################################################################################
-# EXPERIMENTS + PIPELINES 	    
-################################################################################
-├── experiments/
-│   ├── 2025-11-rothko-wasm
-│   ├── 2025-11-wavefield-sieve     # Example timestamped experiment
-│   │   ├── code/                   # Scripts calling engine-core/server
-│   │   └── data/                   # Outputs (Git LFS recommended)
-│   └── pipelines/                  # End-to-end research pipelines
-│       └── robustness_eval/
-│           ├── capsule/	    
-│           │   ├── config.yaml
-│           │   ├── environment.lock.yaml
-│           │   ├── commit.txt
-│           │   └── pipeline.yaml
-│           ├── notebooks/
-│           │    ├── .ipynb_checkpoints
-│           │    └── robustness_analysis.ipynb
-│           ├── outputs/
-│           │   ├── figures/
-│           │   ├── metrics.json
-│           │   ├── report.pdf
-│           │   └── bibliography.bib
-│           ├── results/
-│           ├── src/
-│           │   ├── run.py
-│           │   └── analysis.py            
-│           ├── build.ps1
-│           └── README.md     
+   - **Local Sovereignty Path ($\le$ 40,000 tokens):** Dispatched via OLLAMA_ENDPOINT directly to local GPU hardware.
 
-################################################################################
-# SIMULATIONS / DIGITAL TWIN 
-################################################################################
-├── simulations/
-│   └── digital-twin/
-│       ├── config.yaml
-│       ├── simulator/
-│       └── docs/
+   - **Deep Context Path (40,000 to 120,000 tokens):** Offloaded via SERVERLESS_ENDPOINT to high-context serverless providers such that it prevents local VRAM thrashing. Hard rejections are enforced for payloads exceeding the 120k limit.
 
-################################################################################
-# BUILDER GAME (Sandbox / Learning)
-################################################################################
-├── builder_game/
-│   ├── scenarios/                  # Playable scientific scenarios
-│   ├── sims/                       # Physics-driven gameplay
-│   └── evals/                      # Feedback loops & scoring
+- **Automated Resilience Fallback:** If the serverless route encounters connection timeouts, HTTP status failures, or DNS drops, the engine intercepts the error using an implicit match block, logs a warning via eprintln!, and activates local chunked compression. It fragments the stream into chunks bounded by a strict FALLBACK_CHUNK_WORD_LIMIT = 24_999 and processes them sequentially over the local GPU before merging outputs.
 
-################################################################################
-# PLATFORM / INTERFACES
-################################################################################
-├── platform/
-├── apps/
-├── scripts/
-├── tests/
-├── docs/
-├── assets/
-├── lib/
-├── components/
-├── pages/
-├── public/
-├── styles/
-├── config/
-├── environment/
-└── build/
+- **Structured Epistemic Filtering:** Eliminates code duplication by standardizing shared serde primitives (TopicNode { what, who, next_step } and CorrespondenceGraph { nodes }) in engine-core/src/correspondence.rs.
+
+- **Zero-Copy Serialization Path:** The web interface handler (engine-server/src/main.rs) converts raw inbound POST HTTP Bytes into un-cloned &str references, forwarding text arrays directly to the inference layer to avoid heap fragmentation.
+
+- **Institutional-scale dataset ingest:** Features an in-memory, zero-dependency Apache Parquet stream deserializer (engine-server/src/hf_ingest.rs) targeting structured, PII-scrubbed datasets like FineWeb-Edu and FinePDFs via authenticated HTTP range requests. It automatically binds source document hashes to extracted topic nodes to maintain complete data provenance.
+
+- **Sanitized Embedded Visualizations:** Exposes a GET route /api/v1/viz/network-graph that reads from the append-only SQLite lineage database and exports formatted topological JSON manifests under kernel_store/visualizations. Filenames are dynamically scrubbed of slashes, whitespace, and query parameters using safe underscore sanitization.
+
+- **Cross-Target Platform Uniformity:** Native storage requirements (rusqlite) are strictly gated away from WebAssembly blocks, ensuring that engine-core and engine-wasm compile smoothly under wasm32-unknown-unknown for web implementations.
+
+## Quick Start
+
+```bash
+cargo build --release --workspace
+cargo run --release -p engine-server
 ```
+
+Ingest → stream → visualize:
+
+```bash
+POST /api/v1/ingest
+GET  /api/v1/viz/network-graph
+```
+
+### Research Directions 
+
+* Retrieval-based reasoning over persistent graph-structured memory states
+* Automated experimentation as state evolution on typed execution graphs
+* Literature triangulation across heterogeneous knowledge sources
+* Collective intelligence as distributed scientific reasoning systems
+
+### Attribution
+
+Visual diagram and images produced through a collaborative synthesis of author-led conceptual sketches plus GPT-5.5/Image 2.0 reasoning.

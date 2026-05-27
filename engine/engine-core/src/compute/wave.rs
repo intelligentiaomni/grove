@@ -15,6 +15,20 @@ pub struct Wavefield {
     pub next: Vec<f32>,
 }
 
+pub fn step_wavefield(field: &mut [f32], c: f32, dt: f32, dx: f32) {
+    if field.len() < 3 {
+        return;
+    }
+
+    let coeff = (c * dt / dx).powi(2);
+    let previous = field.to_vec();
+
+    for idx in 1..field.len() - 1 {
+        let lap = previous[idx - 1] + previous[idx + 1] - 2.0 * previous[idx];
+        field[idx] = previous[idx] + coeff * lap;
+    }
+}
+
 impl Wavefield {
     /// Create a wavefield initialized to zeros.
     pub fn new(width: usize, height: usize) -> Self {
@@ -35,9 +49,15 @@ impl Wavefield {
 
     /// Reset all fields to zero.
     pub fn reset(&mut self) {
-        for v in &mut self.prev { *v = 0.0; }
-        for v in &mut self.curr { *v = 0.0; }
-        for v in &mut self.next { *v = 0.0; }
+        for v in &mut self.prev {
+            *v = 0.0;
+        }
+        for v in &mut self.curr {
+            *v = 0.0;
+        }
+        for v in &mut self.next {
+            *v = 0.0;
+        }
     }
 
     /// Seed a point impulse at (x, y) into `curr` (optionally with value).
@@ -61,16 +81,22 @@ impl Wavefield {
         let nx = self.width;
         let ny = self.height;
         let len = self.len();
-        if len == 0 { return; }
+        if len == 0 {
+            return;
+        }
 
         // stability factor
         let coeff = (c * dt / dx).powi(2);
 
         // index helper
         let idx = |x: isize, y: isize| -> Option<usize> {
-            if x < 0 || y < 0 { return None; }
+            if x < 0 || y < 0 {
+                return None;
+            }
             let (xu, yu) = (x as usize, y as usize);
-            if xu >= nx || yu >= ny { return None; }
+            if xu >= nx || yu >= ny {
+                return None;
+            }
             Some(yu * nx + xu)
         };
 
@@ -80,10 +106,10 @@ impl Wavefield {
                 let center_i = idx(x, y).unwrap();
                 // fetch neighbor values (if out-of-bounds, use center value => zero Neumann-ish)
                 let center = self.curr[center_i];
-                let left   = idx(x - 1, y).map(|i| self.curr[i]).unwrap_or(center);
-                let right  = idx(x + 1, y).map(|i| self.curr[i]).unwrap_or(center);
-                let up     = idx(x, y - 1).map(|i| self.curr[i]).unwrap_or(center);
-                let down   = idx(x, y + 1).map(|i| self.curr[i]).unwrap_or(center);
+                let left = idx(x - 1, y).map(|i| self.curr[i]).unwrap_or(center);
+                let right = idx(x + 1, y).map(|i| self.curr[i]).unwrap_or(center);
+                let up = idx(x, y - 1).map(|i| self.curr[i]).unwrap_or(center);
+                let down = idx(x, y + 1).map(|i| self.curr[i]).unwrap_or(center);
 
                 let lap = left + right + up + down - 4.0 * center;
 
@@ -97,6 +123,8 @@ impl Wavefield {
         std::mem::swap(&mut self.curr, &mut self.next);
 
         // optional: clear next (not strictly necessary but keeps expectations)
-        for v in &mut self.next { *v = 0.0; }
+        for v in &mut self.next {
+            *v = 0.0;
+        }
     }
 }
