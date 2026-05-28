@@ -21,7 +21,7 @@
 
 Grove is a high-concurrency, sovereign scientific discovery substrate engineered in Rust, leveraging computational infrastructure for resilient scientific organizations. This system executes literature triangulation, epistemic filtering, and data extraction over text payloads scaling up to 120,000 tokens while enabling data sovereignty via a bare-metal microkernel boundary.
 
-Research intelligence = structured graph + constrained execution + distributed routing + persistent traceability
+Scientific intelligence = structured graph + constrained execution + distributed routing + persistent traceability
 
 ## TL;DR
 
@@ -59,53 +59,80 @@ The system is modeled as a retrieval-conditioned state transition system over a 
 ## Architecture Overview
 
 ```mermaid
-flowchart TD
-    %% =========================
-    %% Core System Boundary
-    %% =========================
-    User[Researcher / Agent / External Query]
-    subgraph Engine["Scientific Intelligence Substrate (engine)"]
-        direction TB
-        Kernel["engine-kernel\n(no_std, x86_64)\nCoroutine Scheduler\nCapability Isolation\nKernelChannel IPC"]
-        Core["engine-core\nResearch IR Layer\nTopicNode\nResearchThreadObject\nScientificHypothesisNode"]
-        ML["engine-ml\nInference Router\nToken Accounting (BPE)\nContext Budgeting\nDashMap Cache Layer"]
-        Server["engine-server\nAxum HTTP Runtime\nStreaming Ingestion\nDataset → Artifact Pipeline"]
-        WASM["engine-wasm\nBrowser Execution Target\nGraph Visualization\nLightweight Retrieval Layer"]
-    end
-    %% =========================
-    %% External Systems
-    %% =========================
-    Cloud["Remote Model Endpoints"]
-    Local["Local GPU Runtime"]
-    Datasets["External Corpora\n(FineWeb-Edu / FinePDFs)"]
-    Storage["Artifact Store\n(SQLite / Graph Logs)"]
-    %% =========================
-    %% Data / Control Flow
-    %% =========================
-    User --> Server
-    Server --> Core
-    Server --> ML
-    ML --> Local
-    ML --> Cloud
-    ML --> Core
-    Server --> Datasets
-    Datasets --> Server
-    Core --> Kernel
-    ML --> Kernel
-    Kernel --> Storage
-    Server --> Storage
-    Core --> WASM
-    Server --> WASM
-    WASM --> User
-    %% =========================
-    %% Feedback Loops
-    %% =========================
-    ML -->|Inference Results| Server
-    Server -->|Structured Artifacts| Core
-    Core -->|Graph State| WASM
-    WASM -->|Interaction Feedback| Server
-```
+flowchart LR
 
+%% =========================
+%% Core System Boundary
+%% =========================
+
+User[Researcher / Agent / External Query]
+
+subgraph Engine["Scientific Intelligence Substrate"]
+
+direction TB
+
+Kernel["engine-kernel\n(no_std, x86_64)\nCoroutine Scheduler\nCapability Isolation\nKernelChannel IPC"]
+
+Core["engine-core\nResearch IR Layer\nTopicNode\nResearchThreadObject\nScientificHypothesisNode"]
+
+ML["engine-ml\nInference Router\nToken Accounting (BPE)\nContext Budgeting\nDashMap Cache Layer"]
+
+Server["engine-server\nAxum HTTP Runtime\nStreaming Ingestion\nDataset to Artifact Pipeline"]
+
+WASM["engine-wasm\nBrowser Execution Target\nGraph Visualization\nLightweight Retrieval Layer"]
+
+end
+
+%% =========================
+%% External Systems
+%% =========================
+
+Cloud["Remote Model Endpoints"]
+Local["Local GPU Runtime"]
+Datasets["External Corpora\n(FineWeb-Edu / FinePDFs)"]
+Storage["Artifact Store\n(SQLite / Graph Logs)"]
+
+%% =========================
+%% Data / Control Flow
+%% =========================
+
+User --> Server
+
+Server --> Core
+Server --> ML
+
+ML --> Local
+ML --> Cloud
+ML --> Core
+
+Datasets --> Server
+
+Core --> Kernel
+ML --> Kernel
+
+Kernel --> Storage
+Server --> Storage
+
+Core --> WASM
+Server --> WASM
+
+WASM --> User
+
+%% =========================
+%% Feedback Loops
+%% =========================
+
+ML -->|Inference Results| Server
+Server -->|Structured Artifacts| Core
+Core -->|Graph State| WASM
+WASM -->|Interaction Feedback| Server
+
+%% =========================
+%% Orthogonal Edge Routing
+%% =========================
+
+linkStyle default interpolate stepBefore
+```
 
 ## Technical Specifications
 
