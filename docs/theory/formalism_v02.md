@@ -24,7 +24,9 @@ $$G = (V, E)$$
 
 Edge typing function:
 
-$$ \tau \in \{\text{Control}, \text{Inference}, \text{Data}, \text{Artifact}, \text{Observation}\} $$
+```math
+\tau \in \{\text{Control}, \text{Inference}, \text{Data}, \text{Artifact}, \text{Observation}\}
+```
 
 ---
 
