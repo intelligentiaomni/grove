@@ -29,7 +29,7 @@ A Rust-native scientific intelligence substrate for resilient, local-first resea
 
 ## Core Thesis
 
-Massive scale breeds fragility; minimal footprint yields resilience.
+> Massive scale breeds fragility; minimal footprint yields resilience.
 
 Modern computation dramatically reduces the minimum viable scale required for advanced scientific operations. Open-weight models, cloud infrastructure, adaptive modular pipelines, and global scientific literature access enable research at more compressed scales, that previously required large institutional coordination layers. One strong systems architecture can amplify an entire organization. If a technical paradigm shifts, a micro-lab can rewrite its automated pipeline over a weekend.  
 

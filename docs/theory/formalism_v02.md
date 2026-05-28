@@ -2,39 +2,39 @@
 
 ## 1. System Definition
 
-*$$\mathcal{S} = (G, X, R, T, \pi, \Omega)$$*
+$$\mathcal{S} = (G, X, R, T, \pi, \Omega)$$
 
 Where:
 
-- ( *G* = (*V, E*) ): persistent graph structure (IR)
-- ( *X* ): distributed state space over nodes
-- ( *R* ): retrieval operator
-- ( *T* ): state transition function
-- ( *$\pi$* ): policy over retrieved state
-- ( *$\Omega$* ): execution trace / observation map
+* $( G = (V, E) )$ : persistent graph structure (IR)
+* $( X )$ : distributed state space over nodes
+* $( R )$ : retrieval operator
+* $( T )$ : state transition function
+* $( \pi )$ : policy over retrieved state
+* $( \Omega )$ : execution trace / observation map
 
 ---
 
 ## 2. Graph (Memory + Structure)
 
-*$$G = (V, E)$$*
+$$G = (V, E)$$
 
-- ( *V* ): computational nodes (Kernel, Core, ML, Server, WASM, Storage)
-- ( *E* $\subseteq$ *V* $\times$ *V* $\times$ *$\tau$* ): typed edges
+* $( V )$ : computational nodes (Kernel, Core, ML, Server, WASM, Storage)
+* $( E \subseteq V \times V \times \tau )$ : typed edges
 
 Edge typing function:
 
-*$$\tau \in \{\text{Control}, \text{Inference}, \text{Data}, \text{Artifact}, \text{Observation}\}$$*
+$$\tau \in \{\text{Control}, \text{Inference}, \text{Data}, \text{Artifact}, \text{Observation}\}$$
 
 ---
 
 ## 3. State Space (Distributed Memory)
 
-*$$X = \underset {v \in V} \prod X_v$$*
+$$X = \underset {v \in V} \prod X_v$$
 
 Each node holds a local state: 
 
-*$$x_v \in X_v$$*
+$$x_v \in X_v$$
 
 Global system state:
 
@@ -44,10 +44,10 @@ $$x = (x_v)_{v \in V}$$
 
 ## 4. Retrieval Operator (Context Projection)
 
-*$$R: (G, X, q) \rightarrow \tilde{X}$$*
+$$R: (G, X, q) \rightarrow \tilde{X}$$
 
-- ( *$q$* ): query / task context
-- ( *$\tilde{X} \subseteq X$* ): induced substate
+* $( q )$ : query / task context
+* $( \tilde{X} \subseteq X )$ : induced substate
 
 Interpretation:
 
@@ -59,7 +59,7 @@ Interpretation:
 
 $$\pi: (G, \tilde{X}, q) \rightarrow A$$
 
-- ( *$A$* ): action space (ingest, infer, schedule, update, persist)
+* $( A )$ : action space (ingest, infer, schedule, update, persist)
 
 ---
 
@@ -87,9 +87,9 @@ $$\tau = (\tau_1, \tau_2, \dots, \tau_n)$$
 
 Properties:
 
-- deterministic under fixed ( (*$G, x_0, q$*) )
-- replayable
-- fully observable
+* deterministic under fixed $( (G, x_0, q) )$
+* replayable
+* fully observable
 
 ---
 
@@ -105,12 +105,12 @@ $$x_{t+1} = T\Big(x_t, \pi(G, R(G,x_t,q_t), q_t)\Big)$$
 
 This system defines:
 
-- a **graph-structured memory substrate (*$G$*)**
-- a **distributed state space (*$X$*)**
-- a **retrieval-conditioned projection operator (*$R$*)**
-- a **policy-driven execution layer (*$π$*)**
-- a **state transition system (*$T$*)**
-- a **fully observable trace semantics (*$Ω$*)**
+* a **graph-structured memory substrate $(G)$**
+* a **distributed state space $(X)$**
+* a **retrieval-conditioned projection operator $(R)$**
+* a **policy-driven execution layer $(π)$**
+* a **state transition system $(T)$**
+* a **fully observable trace semantics $(Ω)$**
 
 ---
 
@@ -118,13 +118,13 @@ This system defines:
 
 The system optimizes:
 
-*$$\min ; \text{coordination complexity}(X, G)$$*
+$$\min ; \text{coordination complexity}(X, G)$$
 
 subject to:
 
-- reproducibility of traces
-- bounded execution steps
-- stable graph consistency under updates
+* reproducibility of traces
+* bounded execution steps
+* stable graph consistency under updates
 
 ---
 

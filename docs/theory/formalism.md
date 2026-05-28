@@ -9,25 +9,27 @@ All core modules MUST be derivable from this specification.
 ## 1. Fragment Definition
 ### 1.1 Fragment Space 
 
-Let *$\mathcal{F}$* be the space of all valid fragments.
+Let $\mathcal{F}$ 
+
+be the space of all valid fragments.
 
 A fragment is defined as:
 
-*$$f = ( S, T, M, \phi )$$*
+$$f = ( S, T, M, \phi )$$
 
 where
 
-*$S$*: Structure (machine-interpretable representation)
+$S$ : Structure (machine-interpretable representation)
 
-*$T$*: Type (categorical role)
+$T$ : Type (categorical role)
 
-*$M$*: Metadata (contextual attributes)
+$M$ : Metadata (contextual attributes)
 
-*$\phi$*: Fitness function projection
+$\phi$ : Fitness function projection
 
 ### 1.2 Structure 
 
-*$$S \in\mathcal{S}$$*
+$$S \in\mathcal{S}$$
 
 Constraints:
 
@@ -39,75 +41,75 @@ Constraints:
 
 ### 1.3 Type 
 
-*$$T \in\mathcal{T}$$*
+$$T \in\mathcal{T}$$
 
 Finite type set:
 
-*$T$* = { hypothesis, heuristic, constraint, metric, artifact }
+$$T = \{ hypothesis, heuristic, constraint, metric, artifact \}$$
 
 Type determines allowed transformation operators.
 
 ### 1.4 Metadata 
 
-*$$M = ( c, v, τ )$$*
+$$M = ( c, v, τ )$$
 
 where
 
-*$c$*: context
+$c$ : context
 
-*$v$*: version
+$v$ : version
 
-*$\tau$*: timestamp
+$\tau$ : timestamp
 
 Metadata does not affect fragment identity unless explicitly included in structure.
 
 ## 2. Fragment Validity
 
-A fragment  *$f$*  is valid iff:
+A fragment  $f$  is valid iff:
 
-- *$S$* satisfies schema
+* $S$ satisfies schema
 
-- *$T \in \mathcal{T}$*
+* $T \in \mathcal{T}$
 
-- Required metadata fields exist
+* Required metadata fields exist
 
-- All invariants (Section 6) hold 
+* All invariants (Section 6) hold 
 
 Invalid fragments MUST NOT enter the population.
 
 ## 3. Evolution Operators
 
-Let *$E : \mathcal{F} \to \mathcal{F}$*
+Let $E : \mathcal{F} \to \mathcal{F}$
 
 Evolution operators are members of set:
 
-*$\mathcal{E} = \{ \mu, \rho, \pi, \kappa \}$*
+$\mathcal{E} = \{ \mu, \rho, \pi, \kappa \}$
 
 where
 
-$\mu$: mutation
+$\mu$ : mutation
 
-$\rho$: recombination
+$\rho$ : recombination
 
-$\pi$: pruning
+$\pi$ : pruning
 
-$\kappa$: compression
+$\kappa$ : compression
 
 ### 3.1 Mutation 
 
-*$\mu ( f ) = f'$*
+$\mu ( f ) = f'$
 
 Constraints:
 
-- Type preserved
+* Type preserved
 
-- Schema preserved
+* Schema preserved
 
-- Identity hash changes
+* Identity hash changes
 
 ### 3.2 Recombination 
 
-*$$\rho ( f_i , f_j ) = f_k$$*
+$$\rho ( f_i , f_j ) = f_k$$
 
 Constraints:
 
@@ -123,31 +125,31 @@ Does not alter fragment definition.
 
 ### 3.4 Compression 
 
-*$$\kappa ( f ) = f'$$*
+$$\kappa ( f ) = f'$$
 
 Constraints:
 
-- Semantic equivalence preserved
+* Semantic equivalence preserved
 
-- Fitness ordering preserved (see Section 4)
+* Fitness ordering preserved (see Section 4)
 
 ## 4. Fitness
 
 Define fitness function:
 
-*$$\phi : F \to \mathcal{R}$$*
+$$\phi : F \to \mathcal{R}$$
 
 Properties:
 
-- Comparable within shared context
+* Comparable within shared context
 
-- Deterministic under fixed evaluation conditions
+* Deterministic under fixed evaluation conditions
 
-- May be multi-objective (vector-valued extension allowed)
+* May be multi-objective (vector-valued extension allowed)
 
 Optional extension:
 
-*$$\phi : F \to \mathcal{R}^n$$*
+$$\phi : F \to \mathcal{R}^n$$
 
 with Pareto ordering.
 
@@ -155,17 +157,17 @@ with Pareto ordering.
 
 Define perturbation distribution:
 
-*$$\delta ∼ \mathcal{P}$$*
+$$\delta ∼ \mathcal{P}$$
 
 Robustness:
 
-*$$R ( f ) = E_ \delta ∼ P (\Phi ( f + \delta) − \phi ( f ))$$*
+$$R ( f ) = E_ \delta ∼ P (\Phi ( f + \delta) − \phi ( f ))$$
 
 where
 
-- *$f + \delta$* denotes structural perturbation.
+* $f + \delta$ denotes structural perturbation.
 
-- Validity must hold post-perturbation.
+* Validity must hold post-perturbation.
 
 Interpretation:
 
@@ -177,21 +179,21 @@ The following invariants MUST hold globally:
 
 Validity Invariant
 
-*$f \in F \Rightarrow f$* satisfies schema
+$f \in F \Rightarrow f$ satisfies schema
 
 Type Preservation Under Mutation
 
-*$T (\mu ( f )) = T ( f )$*
+$$T (\mu ( f )) = T ( f )$$
 
 Compression Semantic Equivalence
 
-*$\phi ( f ) = \phi (κ ( f ))$*
+$$\phi ( f ) = \phi (κ ( f ))$$
 
 Deterministic Evaluation
 
 Under fixed context:
 
-*$\phi ( f )$* = constant
+$\phi ( f )$ = constant
 
 Additional invariants:
 
@@ -201,37 +203,37 @@ Population evaluation budget is finite and conserved
 
 ## 7. Population Dynamics
 
-Let *$P_t \subset F$* be the population at time *$t$*.
+Let $P_t \subset F$ be the population at time $t$.
 
 Selection probability:
 
-*$Pr⁡ ( f_t+1) \alpha \phi ( f_t) R ( f_t)$*
+$$Pr⁡ ( f_t+1) \alpha \phi ( f_t) R ( f_t)$$
 
 Normalized form: 
 
-*$$Pr⁡(f_t+1) = \frac{\phi (f_t) R(f_t)}{∑_{f\in\mathcal{P}_t} \phi(f) R(f)}$$*
+$$Pr⁡(f_t+1) = \frac{\phi (f_t) R(f_t)}{∑_{f\in\mathcal{P}_t} \phi(f) R(f)}$$
 
 ## 8. Implementation Requirement
 
 All core modules MUST:
 
-- Enforce fragment validity
+* Enforce fragment validity
 
-- Declare which operator they implement
+* Declare which operator they implement
 
-- Not introduce new operator types without updating this document
+* Not introduce new operator types without updating this document
 
 ## 9. Completion Criteria (v0.1)
 
 Formalism v0.1 is complete when:
 
-- Fragment schema enforces Section 1–2
+* Fragment schema enforces Section 1–2
 
-- Evolutionary extractor maps strictly to operators in Section 3
+* Evolutionary extractor maps strictly to operators in Section 3
 
-- Fitness function signature matches Section 4
+* Fitness function signature matches Section 4
 
-- Robustness experiments compute Section 5
+* Robustness experiments compute Section 5
 
 ## Status
 
