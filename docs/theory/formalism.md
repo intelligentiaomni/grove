@@ -45,7 +45,7 @@ $$T \in\mathcal{T}$$
 
 Finite type set:
 
-$$T = \{ hypothesis, heuristic, constraint, metric, artifact \}$$
+$$T = \{ \text{hypothesis}, \text{heuristic}, \text{constraint}, \text{metric}, \text{artifact} \}$$
 
 Type determines allowed transformation operators.
 
