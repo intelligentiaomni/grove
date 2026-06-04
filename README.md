@@ -59,79 +59,32 @@ The system is modeled as a retrieval-conditioned state transition system over a 
 ## Architecture Overview
 
 ```mermaid
-flowchart LR
+flowchart TD
+    User["Researcher / Agent"]
+    Server["engine-server<br/>Axum HTTP<br/>Streaming ingest"]
+    Core["engine-core<br/>Research IR<br/>Lineage contracts"]
+    ML["engine-ml<br/>Inference router<br/>Token auditing"]
+    Kernel["engine-kernel<br/>no_std scheduler<br/>KernelChannel IPC"]
+    WASM["engine-wasm<br/>Browser target<br/>Twin simulation"]
+    Datasets["External corpora<br/>FineWeb-Edu / FinePDFs"]
+    Local["Local GPU runtime"]
+    Cloud["Remote model endpoints"]
+    Storage["Artifact store<br/>SQLite / graph logs"]
 
-%% =========================
-%% Core System Boundary
-%% =========================
-
-User[Researcher / Agent / External Query]
-
-subgraph Engine["Scientific Intelligence Substrate"]
-
-direction TB
-
-Kernel["engine-kernel\n(no_std, x86_64)\nCoroutine Scheduler\nCapability Isolation\nKernelChannel IPC"]
-
-Core["engine-core\nResearch IR Layer\nTopicNode\nResearchThreadObject\nScientificHypothesisNode"]
-
-ML["engine-ml\nInference Router\nToken Accounting (BPE)\nContext Budgeting\nDashMap Cache Layer"]
-
-Server["engine-server\nAxum HTTP Runtime\nStreaming Ingestion\nDataset to Artifact Pipeline"]
-
-WASM["engine-wasm\nBrowser Execution Target\nGraph Visualization\nLightweight Retrieval Layer"]
-
-end
-
-%% =========================
-%% External Systems
-%% =========================
-
-Cloud["Remote Model Endpoints"]
-Local["Local GPU Runtime"]
-Datasets["External Corpora\n(FineWeb-Edu / FinePDFs)"]
-Storage["Artifact Store\n(SQLite / Graph Logs)"]
-
-%% =========================
-%% Data / Control Flow
-%% =========================
-
-User --> Server
-
-Server --> Core
-Server --> ML
-
-ML --> Local
-ML --> Cloud
-ML --> Core
-
-Datasets --> Server
-
-Core --> Kernel
-ML --> Kernel
-
-Kernel --> Storage
-Server --> Storage
-
-Core --> WASM
-Server --> WASM
-
-WASM --> User
-
-%% =========================
-%% Feedback Loops
-%% =========================
-
-ML -->|Inference Results| Server
-Server -->|Structured Artifacts| Core
-Core -->|Graph State| WASM
-WASM -->|Interaction Feedback| Server
-
-%% =========================
-%% Orthogonal Edge Routing
-%% =========================
-
-linkStyle default interpolate stepBefore
+    User --> Server
+    Datasets --> Server
+    Server --> Core
+    Server --> ML
+    ML --> Local
+    ML --> Cloud
+    ML --> Core
+    Core --> Kernel
+    ML --> Kernel
+    Kernel --> Storage
+    Server --> Storage
+    Core --> WASM
+    Server --> WASM
+    WASM --> User
 ```
 
 ## Technical Specifications
@@ -164,6 +117,12 @@ linkStyle default interpolate stepBefore
 cargo build --release --workspace
 cargo run --release -p engine-server
 ```
+
+## Project Metadata
+
+- **License:** Apache License 2.0, copyright 2025 IO Lab. See `LICENSE` and `NOTICE`.
+- **Security:** Maintainers with write access are expected to enable GitHub two-factor authentication. See `.github/SECURITY.md`.
+- **Sponsors:** GitHub Sponsors is configured through `.github/FUNDING.yml`; details live in `.github/SPONSORS.md`.
 
 Ingest → stream → visualize:
 

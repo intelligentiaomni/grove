@@ -1,6 +1,40 @@
 import networkx as nx
 import numpy as np
 from scipy.optimize import minimize
+from math import log1p
+
+
+def prioritize_lineage_packet(packet: dict) -> dict:
+    """
+    Rank inbound Rust lineage packets for deeper FineWeb/FinePDF processing.
+    Higher epistemic score and larger-but-bounded token payloads rise first.
+    """
+    token_count = max(0, int(packet.get("token_count", 0) or 0))
+    epistemic_score = float(packet.get("epistemic_score", 0.0) or 0.0)
+    source_kind = str(packet.get("source_kind", "") or "").lower()
+    corpus_weight = 1.15 if source_kind in {"finepdf", "fineweb", "fineweb-edu"} else 1.0
+    bounded_token_weight = min(token_count, 24_999)
+    priority_score = epistemic_score * log1p(bounded_token_weight) * corpus_weight
+
+    return {
+        "node_id": packet.get("node_id", ""),
+        "parent_hash": packet.get("parent_hash"),
+        "payload_sha256": packet.get("payload_sha256", ""),
+        "token_count": token_count,
+        "epistemic_score": round(epistemic_score, 6),
+        "source_kind": source_kind or "unknown",
+        "priority_score": round(priority_score, 6),
+        "deep_processing": priority_score >= 3.0 and token_count <= 24_999,
+    }
+
+
+def prioritize_lineage_packets(packets: list) -> list:
+    prioritized = [prioritize_lineage_packet(packet) for packet in packets]
+    return sorted(
+        prioritized,
+        key=lambda item: (item["deep_processing"], item["priority_score"]),
+        reverse=True,
+    )
 
 def run_network_optimization(nodes: list, edges: list) -> dict:
     """

@@ -7,3 +7,7 @@ members = [
   "engine/engine-wasm"
 ]
 resolver = "2"
+
+[workspace.package]
+authors = ["IO Lab"]
+license = "Apache-2.0"

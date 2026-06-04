@@ -1,43 +1,37 @@
-# GitHub GROVE Sponsors
+# GitHub Sponsors
 
-GROVE is an open, AI-powered engine for scientific discovery. Your support helps us build sustainable open tools for research, development, and continuous learning.
+GROVE is an open engine for scientific discovery. Your support helps keep the research tooling sustainable, reproducible, and available to small teams.
 
-Thank you to everyone who supports the project financially or through contributions.
+## Become A Sponsor
 
-## Become a Sponsor
+GitHub Sponsors: https://github.com/sponsors/intelligentiaomni
 
-GitHub Sponsors:  
-🔗 https://github.com/sponsors/intelligentiaomni
+## Sponsor Tiers
 
+### Early Explorer - $3/month
+Listed on the contributors page.
 
-## 🌱 Sponsor Tiers
+### Sprout Supporter - $7/month
+Everything above plus a monthly development update.
 
-### Early Explorer – $3/month
-Listed on the CONTRIBUTORS page.
+### Research Backer - $15/month
+Everything above plus priority issues and early previews.
 
-### Sprout Supporter – $7/month
-Everything above + monthly dev update.
+### Discovery Partner - $30/month
+Everything above plus roadmap input and feature triage.
 
-### Research Backer – $15/month
-Everything above + priority issues + early previews.
+### Lab Partner - $75/month
+Everything above plus a quarterly check-in and optional logo.
 
-### Discovery Partner – $30/month
-Everything above + roadmap input + feature triage.
+### Institutional Steward - $250+/month
+Everything above plus onboarding help and prioritized major issue review.
 
-### Lab Partner – $75/month
-Everything above + quarterly check-in + optional logo.
+## Note On Naming
 
-### Institutional Steward – $250+/month
-Everything above + onboarding help + prioritized major issue review.
+The GitHub organization uses `intelligentiaomni` for IO Lab. Some donation links, including PayPal, still use the former `principia-lab` name.
 
-## Note on Naming
-Our GitHub organization has transitioned to **intelligentiaomni** (IO Lab).
-Some donation links (e.g., PayPal) still use our former name **principia-lab**.  
-Both remain valid.
+Direct PayPal link: https://paypal.me/principia-lab
 
-Direct PayPal link:  
-🔗 https://paypal.me/principia-lab
-
-## 🤝 Thank You
+## Thank You
 
 Your support makes open, reproducible, collaborative research possible.

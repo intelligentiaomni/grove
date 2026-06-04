@@ -4,6 +4,8 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::path::Path;
 use std::sync::Mutex;
 
+use crate::{ExecutionToken, TransitionType};
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct GraphNodeRecord {
     pub node_hash: String,
@@ -20,11 +22,21 @@ pub struct GraphEdgeRecord {
     pub created_at_ms: i64,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GraphTransitionRecord {
+    pub parent_graph_hash: String,
+    pub transition_type: TransitionType,
+    pub output_artifact_hash: String,
+    pub created_at_ms: i64,
+}
+
 #[derive(Debug)]
 pub enum GraphLineageError {
     Busy,
     Sqlite(rusqlite::Error),
 }
+
+pub type LineageError = GraphLineageError;
 
 impl Display for GraphLineageError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -94,6 +106,19 @@ impl GraphLineageController {
                     ON graph_edges(parent_hash);
                 CREATE INDEX IF NOT EXISTS idx_graph_edges_child
                     ON graph_edges(child_hash);
+
+                CREATE TABLE IF NOT EXISTS graph_transitions (
+                    transition_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    parent_graph_hash TEXT NOT NULL,
+                    transition_type TEXT NOT NULL,
+                    output_artifact_hash TEXT NOT NULL,
+                    created_at_ms INTEGER NOT NULL DEFAULT (
+                        CAST(strftime('%s', 'now') AS INTEGER) * 1000
+                    )
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_graph_transitions_parent
+                    ON graph_transitions(parent_graph_hash);
                 "#,
             )?;
             Ok(())
@@ -106,10 +131,7 @@ impl GraphLineageController {
                 r#"
                 INSERT INTO graph_nodes (node_hash, payload_hash, kind, created_at_ms)
                 VALUES (?1, ?2, ?3, ?4)
-                ON CONFLICT(node_hash) DO UPDATE SET
-                    payload_hash = excluded.payload_hash,
-                    kind = excluded.kind,
-                    created_at_ms = excluded.created_at_ms
+                ON CONFLICT(node_hash) DO NOTHING
                 "#,
                 params![
                     node.node_hash,
@@ -128,8 +150,7 @@ impl GraphLineageController {
                 r#"
                 INSERT INTO graph_edges (parent_hash, child_hash, relation, created_at_ms)
                 VALUES (?1, ?2, ?3, ?4)
-                ON CONFLICT(parent_hash, child_hash, relation) DO UPDATE SET
-                    created_at_ms = excluded.created_at_ms
+                ON CONFLICT(parent_hash, child_hash, relation) DO NOTHING
                 "#,
                 params![
                     edge.parent_hash,
@@ -196,6 +217,57 @@ impl GraphLineageController {
         })
     }
 
+    pub fn record_transition(&self, token: ExecutionToken) -> Result<(), LineageError> {
+        self.with_connection(|connection| {
+            connection.execute(
+                r#"
+                INSERT INTO graph_transitions (
+                    parent_graph_hash,
+                    transition_type,
+                    output_artifact_hash
+                )
+                VALUES (?1, ?2, ?3)
+                "#,
+                params![
+                    hex_encode(&token.parent_graph_hash),
+                    transition_type_name(token.transition_type),
+                    hex_encode(&token.output_artifact_hash),
+                ],
+            )?;
+            Ok(())
+        })
+    }
+
+    pub fn transitions_from(
+        &self,
+        parent_graph_hash: &str,
+    ) -> Result<Vec<GraphTransitionRecord>, GraphLineageError> {
+        self.with_connection(|connection| {
+            let mut statement = connection.prepare(
+                r#"
+                SELECT parent_graph_hash, transition_type, output_artifact_hash, created_at_ms
+                FROM graph_transitions
+                WHERE parent_graph_hash = ?1
+                ORDER BY transition_id ASC
+                "#,
+            )?;
+            let rows = statement.query_map(params![parent_graph_hash], |row| {
+                Ok(GraphTransitionRecord {
+                    parent_graph_hash: row.get(0)?,
+                    transition_type: parse_transition_type(row.get::<_, String>(1)?.as_str()),
+                    output_artifact_hash: row.get(2)?,
+                    created_at_ms: row.get(3)?,
+                })
+            })?;
+
+            let mut transitions = Vec::new();
+            for transition in rows {
+                transitions.push(transition?);
+            }
+            Ok(transitions)
+        })
+    }
+
     fn with_connection<T>(
         &self,
         operation: impl FnOnce(&Connection) -> Result<T, GraphLineageError>,
@@ -208,9 +280,38 @@ impl GraphLineageController {
     }
 }
 
+fn transition_type_name(transition_type: TransitionType) -> &'static str {
+    match transition_type {
+        TransitionType::OptimizationPass => "optimization_pass",
+        TransitionType::KernelEvaluation => "kernel_evaluation",
+        TransitionType::Compilation => "compilation",
+        TransitionType::Execution => "execution",
+    }
+}
+
+fn parse_transition_type(value: &str) -> TransitionType {
+    match value {
+        "optimization_pass" => TransitionType::OptimizationPass,
+        "kernel_evaluation" => TransitionType::KernelEvaluation,
+        "compilation" => TransitionType::Compilation,
+        _ => TransitionType::Execution,
+    }
+}
+
+fn hex_encode(bytes: &[u8; 32]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut output = String::with_capacity(64);
+    for byte in bytes {
+        output.push(HEX[(byte >> 4) as usize] as char);
+        output.push(HEX[(byte & 0x0f) as usize] as char);
+    }
+    output
+}
+
 #[cfg(test)]
 mod tests {
     use super::{GraphEdgeRecord, GraphLineageController, GraphLineageError, GraphNodeRecord};
+    use crate::{ExecutionToken, TransitionType};
 
     #[test]
     fn stores_and_queries_graph_lineage_records() {
@@ -261,5 +362,33 @@ mod tests {
             .expect_err("try_lock must fail while locked");
 
         assert!(matches!(err, GraphLineageError::Busy));
+    }
+
+    #[test]
+    fn records_execution_tokens_as_append_only_transitions() {
+        let controller = GraphLineageController::in_memory().expect("db should initialize");
+        let token = ExecutionToken::new([1_u8; 32], TransitionType::OptimizationPass, [2_u8; 32]);
+
+        controller
+            .record_transition(token)
+            .expect("transition insert");
+        controller
+            .record_transition(token)
+            .expect("duplicate token is still a new ledger delta");
+
+        let parent_hash = "0101010101010101010101010101010101010101010101010101010101010101";
+        let transitions = controller
+            .transitions_from(parent_hash)
+            .expect("transition query");
+
+        assert_eq!(transitions.len(), 2);
+        assert_eq!(
+            transitions[0].transition_type,
+            TransitionType::OptimizationPass
+        );
+        assert_eq!(
+            transitions[0].output_artifact_hash,
+            "0202020202020202020202020202020202020202020202020202020202020202"
+        );
     }
 }
