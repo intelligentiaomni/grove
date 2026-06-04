@@ -2,6 +2,8 @@
 name = "engine-kernel"
 version = "0.1.0"
 edition = "2021"
+authors.workspace = true
+license.workspace = true
 
 [dependencies]
-sha2 = { version = "0.10", default-features = false }
+sha2 = { version = "0.10", default-features = false, features = ["force-soft"] }

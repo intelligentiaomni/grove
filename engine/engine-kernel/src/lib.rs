@@ -13,6 +13,27 @@ pub type ModuleId = u64;
 pub type TaskId = u64;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KernelTransitionType {
+    OptimizationPass,
+    KernelEvaluation,
+    Compilation,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ExecutionArtifact {
+    pub parent_graph_hash: ContentHash,
+    pub output_artifact_hash: ContentHash,
+    pub scheduled_tasks: u16,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ProofOfTransition {
+    pub parent_graph_hash: ContentHash,
+    pub transition_type: KernelTransitionType,
+    pub output_artifact_hash: ContentHash,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum KernelError {
     CapabilityMapFull,
     EmptyWeights,
@@ -179,6 +200,26 @@ pub fn content_hash(bytes: &[u8]) -> ContentHash {
     Sha256::digest(bytes).into()
 }
 
+pub fn evaluate_graph_read_only<G: ?Sized>(
+    _input_graph: &G,
+    parent_graph_hash: ContentHash,
+    output_artifact_hash: ContentHash,
+    scheduled_tasks: u16,
+) -> (ExecutionArtifact, ProofOfTransition) {
+    (
+        ExecutionArtifact {
+            parent_graph_hash,
+            output_artifact_hash,
+            scheduled_tasks,
+        },
+        ProofOfTransition {
+            parent_graph_hash,
+            transition_type: KernelTransitionType::KernelEvaluation,
+            output_artifact_hash,
+        },
+    )
+}
+
 pub fn register_token_parsing_matrix_weights<const N: usize>(
     state: &mut KernelState<N>,
     module_id: ModuleId,
@@ -237,8 +278,8 @@ extern crate std;
 #[cfg(test)]
 mod tests {
     use super::{
-        content_hash, register_token_parsing_matrix_weights, KernelError, KernelState,
-        Quantization, ScheduleClass,
+        content_hash, evaluate_graph_read_only, register_token_parsing_matrix_weights, KernelError,
+        KernelState, KernelTransitionType, Quantization, ScheduleClass,
     };
 
     #[test]
@@ -301,5 +342,23 @@ mod tests {
 
         assert_eq!(err, KernelError::InvalidWeightLength);
         assert_eq!(state.capabilities.get(11), None);
+    }
+
+    #[test]
+    fn graph_evaluation_boundary_accepts_read_only_inputs() {
+        let graph = [1_u8, 2, 3];
+        let parent_graph_hash = content_hash(&graph);
+        let output_artifact_hash = content_hash(b"artifact");
+
+        let (artifact, proof) =
+            evaluate_graph_read_only(&graph, parent_graph_hash, output_artifact_hash, 3);
+
+        assert_eq!(artifact.parent_graph_hash, parent_graph_hash);
+        assert_eq!(artifact.output_artifact_hash, output_artifact_hash);
+        assert_eq!(artifact.scheduled_tasks, 3);
+        assert_eq!(
+            proof.transition_type,
+            KernelTransitionType::KernelEvaluation
+        );
     }
 }
