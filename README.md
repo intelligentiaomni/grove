@@ -80,9 +80,13 @@ Each stage exposes explicit contracts, preserves transformation history, and min
 
 ## Architecture Overview
 
-<p>
-  <img src="docs/assets/hyperbolic-architecture.svg" alt="Topology Map"><br>
-  <sub><b>Figure 1: Poincaré Disk Projection of the Federated System-of-Systems Architecture</b> Nodes radiate from the central core across three main branches, compressing exponentially toward the perimeter. This layout demonstrates how complex terminal runtimes are structurally contained without cluttering the primary execution path.</sub>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/hyperbolic_architecture_dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/hyperbolic_architecture.svg">
+    <img src="docs/assets/hyperbolic-architecture.svg" alt="Topology Map">
+  </picture><br>
+  <sub><b>Figure 1: Poincaré Disk Projection of the Architecture</b> Nodes radiate from the central core across three main branches, compressing exponentially toward the perimeter. This layout demonstrates how complex terminal runtimes are structurally contained without cluttering the primary execution path.</sub>
 </p>
 
 ## Technical Specifications
@@ -116,12 +120,6 @@ cargo build --release --workspace
 cargo run --release -p engine-server
 ```
 
-## Project Metadata
-
-- **License:** Apache License 2.0, copyright 2025 IO Lab. See `LICENSE` and `NOTICE`.
-- **Security:** Maintainers with write access are expected to enable GitHub two-factor authentication. See `.github/SECURITY.md`.
-- **Sponsors:** GitHub Sponsors is configured through `.github/FUNDING.yml`; details live in `.github/SPONSORS.md`.
-
 Ingest → stream → visualize:
 
 ```bash
@@ -129,13 +127,19 @@ POST /api/v1/ingest
 GET  /api/v1/viz/network-graph
 ```
 
+## Project Metadata
+
+- **License:** Apache License 2.0, copyright 2025 IO Lab. See `LICENSE` and `NOTICE`.
+- **Security:** Maintainers with write access are expected to enable GitHub two-factor authentication. See `.github/SECURITY.md`.
+- **Sponsors:** GitHub Sponsors is configured through `.github/FUNDING.yml`; details live in `.github/SPONSORS.md`.
+
+### Attribution
+
+Visual diagram and images produced through a collaborative synthesis of author-led conceptual sketches plus GPT-5.5/Image 2.0 reasoning.
+
 ### Research Directions 
 
 * Retrieval-based reasoning over persistent graph-structured memory states
 * Automated experimentation as state evolution on typed execution graphs
 * Literature triangulation across heterogeneous knowledge sources
 * Collective intelligence as distributed scientific reasoning systems
-
-### Attribution
-
-Visual diagram and images produced through a collaborative synthesis of author-led conceptual sketches plus GPT-5.5/Image 2.0 reasoning.
