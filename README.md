@@ -80,12 +80,10 @@ Each stage exposes explicit contracts, preserves transformation history, and min
 
 ## Architecture Overview
 
-<p align="center">
-  <img src="docs/assets/hyperbolic-architecture.svg" alt="Hyperbolic Poincaré Disk System Topology" width="100%">
+<p>
+  <img src="docs/assets/hyperbolic-architecture.svg" alt="Topology Map"><br>
+  <sub><b>Figure 1: Poincaré Disk Projection of the Federated System-of-Systems Architecture</b> Nodes radiate from the central core across three main branches, compressing exponentially toward the perimeter. This layout demonstrates how complex terminal runtimes are structurally contained without cluttering the primary execution path.</sub>
 </p>
-
-##### Figure 1: Poincaré Disk Projection of the Federated System-of-Systems Architecture
-The system topology is mapped using non-Euclidean hyperbolic spacing bounded within a thin circular perimeter frame. The state foundation (engine-core) acts as the origin point of coordinate space, retaining a linear, low-density aspect ratio at the center for operational clarity. Structural transformations radiate outward toward the perimeter along designated symbolic system-of-systems branches: the Perception Gateway ($\alpha$), the Compute Core ($\beta$), and the Ledger Complex ($\gamma$). Components are stylized uniformly using minimal, narrow rectangular text blocks with rounded boundaries to optimize space. As the tree approaches the boundary ring, spatial coordinates compress exponentially, visually demonstrating how complex terminal leaf runtime environments, such as browser-isolated execution twins (engine-wasm) and topological lineage storage repositories (optiserver)are structurally contained without polluting the primary execution path.
 
 ## Technical Specifications
 
