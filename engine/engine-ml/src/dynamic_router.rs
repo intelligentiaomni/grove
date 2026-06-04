@@ -69,6 +69,30 @@ struct ServerlessRequest<'a> {
     token_weight: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RouterAuditEnvelope {
+    pub schema_version: String,
+    pub route: InferenceRoute,
+    pub token_weight: usize,
+    pub accepted: bool,
+    pub rejection_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TokenGatewayChunk {
+    pub sequence: usize,
+    pub word_count: usize,
+    pub token_weight: usize,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TokenGatewayPlan {
+    pub schema_version: String,
+    pub original_word_count: usize,
+    pub chunks: Vec<TokenGatewayChunk>,
+}
+
 impl DynamicInferenceRouter {
     pub fn from_env() -> Result<Self, RouterError> {
         let ollama_endpoint = std::env::var("OLLAMA_ENDPOINT")
@@ -131,10 +155,66 @@ impl DynamicInferenceRouter {
         })
     }
 
+    pub fn audit_text(&self, text: &str) -> RouterAuditEnvelope {
+        let token_weight = self.token_weight(text);
+        match self.route_for(text) {
+            Ok(route) => RouterAuditEnvelope {
+                schema_version: "engine.router.audit.v1".to_string(),
+                route,
+                token_weight,
+                accepted: true,
+                rejection_reason: None,
+            },
+            Err(err) => RouterAuditEnvelope {
+                schema_version: "engine.router.audit.v1".to_string(),
+                route: InferenceRoute::Serverless {
+                    endpoint: self.serverless_endpoint.clone().unwrap_or_default(),
+                    token_weight,
+                },
+                token_weight,
+                accepted: false,
+                rejection_reason: Some(err.to_string()),
+            },
+        }
+    }
+
+    pub fn plan_gateway_chunks(&self, text: &str) -> TokenGatewayPlan {
+        let chunks = chunk_text_under_word_limit(text, FALLBACK_CHUNK_WORD_LIMIT)
+            .into_iter()
+            .enumerate()
+            .map(|(idx, chunk)| TokenGatewayChunk {
+                sequence: idx,
+                word_count: chunk.split_whitespace().count(),
+                token_weight: self.token_weight(&chunk),
+                text: chunk,
+            })
+            .collect::<Vec<_>>();
+
+        TokenGatewayPlan {
+            schema_version: "engine.token_gateway.plan.v1".to_string(),
+            original_word_count: text.split_whitespace().count(),
+            chunks,
+        }
+    }
+
     pub async fn process_text_to_graph(
         &self,
         text: &str,
     ) -> Result<CorrespondenceGraph, RouterError> {
+        let gateway_plan = self.plan_gateway_chunks(text);
+        if gateway_plan.chunks.len() > 1 {
+            let mut nodes = Vec::new();
+            for chunk in gateway_plan.chunks {
+                let graph = self.process_gateway_chunk(&chunk.text).await?;
+                nodes.extend(graph.nodes);
+            }
+            return Ok(CorrespondenceGraph::new(nodes));
+        }
+
+        self.process_gateway_chunk(text).await
+    }
+
+    async fn process_gateway_chunk(&self, text: &str) -> Result<CorrespondenceGraph, RouterError> {
         match self.route_for(text)? {
             InferenceRoute::LocalOllama { .. } => {
                 EpistemicExtractionService::new(&self.ollama_endpoint, LOCAL_OLLAMA_MODEL)
@@ -314,6 +394,17 @@ mod tests {
     }
 
     #[test]
+    fn emits_standard_router_audit_envelope() {
+        let router = router(4, 8);
+
+        let audit = router.audit_text("hello world");
+
+        assert_eq!(audit.schema_version, "engine.router.audit.v1");
+        assert!(audit.accepted);
+        assert_eq!(audit.token_weight, 2);
+    }
+
+    #[test]
     fn requires_serverless_endpoint_for_cloud_route() {
         let router = DynamicInferenceRouter::new("http://127.0.0.1:11434/api/generate", None, 1, 8)
             .expect("tokenizer should initialize");
@@ -345,5 +436,24 @@ mod tests {
                 .sum::<usize>(),
             50_001
         );
+    }
+
+    #[test]
+    fn token_gateway_plans_chunks_before_core_boundary() {
+        let router = router(DEFAULT_LOCAL_TOKEN_LIMIT, DEFAULT_SERVERLESS_TOKEN_LIMIT);
+        let payload = (0..25_001)
+            .map(|idx| format!("word{idx}"))
+            .collect::<Vec<_>>()
+            .join(" ");
+
+        let plan = router.plan_gateway_chunks(&payload);
+
+        assert_eq!(plan.schema_version, "engine.token_gateway.plan.v1");
+        assert_eq!(plan.original_word_count, 25_001);
+        assert_eq!(plan.chunks.len(), 2);
+        assert!(plan
+            .chunks
+            .iter()
+            .all(|chunk| chunk.word_count <= FALLBACK_CHUNK_WORD_LIMIT));
     }
 }

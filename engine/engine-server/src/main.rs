@@ -1,5 +1,6 @@
 use anyhow::{bail, Context, Result};
 use axum::body::Bytes;
+use axum::http::HeaderValue;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
@@ -64,6 +65,7 @@ async fn network_graph_manifest() -> Response {
 }
 
 async fn extract_epistemic_graph(payload: Bytes) -> Response {
+    let provenance = InboundPayloadSignature::from_bytes(&payload);
     match std::str::from_utf8(&payload) {
         Ok(text) => {
             let router = match engine_ml::DynamicInferenceRouter::from_env() {
@@ -78,7 +80,7 @@ async fn extract_epistemic_graph(payload: Bytes) -> Response {
             };
 
             match router.process_text_to_graph(text).await {
-                Ok(graph) => Json(graph).into_response(),
+                Ok(graph) => with_payload_signature(Json(graph).into_response(), &provenance),
                 Err(err) => (
                     StatusCode::BAD_GATEWAY,
                     format!("epistemic extraction failed: {err}"),
@@ -88,6 +90,33 @@ async fn extract_epistemic_graph(payload: Bytes) -> Response {
         }
         Err(_) => (StatusCode::BAD_REQUEST, "request body must be valid UTF-8").into_response(),
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InboundPayloadSignature {
+    pub sha256: String,
+    pub byte_len: usize,
+}
+
+impl InboundPayloadSignature {
+    pub fn from_bytes(bytes: &[u8]) -> Self {
+        let mut hasher = Sha256::new();
+        hasher.update(bytes);
+        Self {
+            sha256: hex::encode(hasher.finalize()),
+            byte_len: bytes.len(),
+        }
+    }
+}
+
+fn with_payload_signature(mut response: Response, signature: &InboundPayloadSignature) -> Response {
+    if let Ok(value) = HeaderValue::from_str(&signature.sha256) {
+        response.headers_mut().insert("x-payload-sha256", value);
+    }
+    if let Ok(value) = HeaderValue::from_str(&signature.byte_len.to_string()) {
+        response.headers_mut().insert("x-payload-bytes", value);
+    }
+    response
 }
 
 /// Simple filesystem layout (under a root dir)

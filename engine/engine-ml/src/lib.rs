@@ -5,7 +5,10 @@ pub mod prefix_control;
 pub mod scheduler;
 pub mod scientific_reasoner;
 
-pub use dynamic_router::{DynamicInferenceRouter, InferenceRoute, RouterError};
+pub use dynamic_router::{
+    DynamicInferenceRouter, InferenceRoute, RouterAuditEnvelope, RouterError, TokenGatewayChunk,
+    TokenGatewayPlan,
+};
 pub use engine_kernel::{
     register_token_parsing_matrix_weights, KernelState, NpuTaskFrame, Quantization,
 };
