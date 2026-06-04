@@ -21,8 +21,6 @@
 
 Grove is a high-concurrency, sovereign scientific discovery substrate engineered in Rust, leveraging computational infrastructure for resilient scientific organizations. This system executes literature triangulation, epistemic filtering, and data extraction over text payloads scaling up to 120,000 tokens while enabling data sovereignty via a bare-metal microkernel boundary.
 
-Scientific intelligence = structured graph + constrained execution + distributed routing + persistent traceability
-
 ## TL;DR
 
 A Rust-native scientific intelligence substrate for resilient, local-first research operations; The system combines asynchronous inference orchestration, graph-structured scientific memory, reproducible data pipelines, and minimized external data exposure model routing into a modular architecture for high-leverage research micro-teams. Integrating open-weight models, automated literature ingestion, and hybrid symbolic/neural workflows, the engine-core investigates how computational infrastructure can amplify scientific iteration speed while reducing institutional overhead and operational fragility.
@@ -44,98 +42,50 @@ The system is modeled as a retrieval-conditioned state transition system over a 
 - Local-first compute with tiered routing across on-device execution, cluster resources, and external model endpoints.
 - Hybrid symbolic–neural workflows integrating graph-based representations with learned models for inference and retrieval.
 
-## Evolution & Lineage
+### Architecture and Execution Lineage
 
-The system enforces a strict functional transformation passthrough that decouples network ingestion, token auditing, core mathematical logic, and analytics.
+The Grove engine is organized as a lineage-preserving, deterministic research execution stack. Each subsystem owns a distinct transformation boundary of ingestion, routing, reasoning, simulation, or orchestration, allowing provenance, reproducibility, and execution semantics to remain explicit across the entire pipeline.
 
-### Decoupled Subsystem Contracts
-1. **`engine-server` (Ingress Boundary)**: Processes inbound dataset payload bytes (FineWeb-Edu / FinePDFs) to compute unique SHA-256 signatures before UTF-8 string conversions, exposing metrics via `x-payload-sha256` headers.
-2. **`engine-ml` (Token Gateway)**: Enforces a strict pre-routing hard ceiling at `FALLBACK_CHUNK_WORD_LIMIT = 24_999` to split blocks before processing. Standardizes validation states through `RouterAuditEnvelope`.
-3. **`engine-core` (Epistemic Matrix)**: Leverages pure Rust collections (`HashSet`) to run cross-parent structural intersections and conceptual similarity calculations without runtime Python overhead.
-4. **`engine-wasm` (Simulation Twin)**: Exposes browser-isolated mathematical twin algorithms via deterministic assembly layers free of native operating system call profiles.
-5. **`optiserver` (Python Orchestrator)**: Processes lineage tracking states through an asynchronous ASGI server, storing results in persistent JSONL append-logs so the Streamlit visualization stack remains stateless and crash-resilient.
+#### Ingress Boundary: `engine-server` 
 
-## Architecture Topology
+An event-driven Axum-based HTTP layer responsible for acquiring, streaming, and transforming external datasets (e.g., FineWeb-Edu, FinePDFs) into structured research artifacts and visualization outputs (D3.js, Obsidian-compatible Markdown). Prior to any UTF-8 conversion, inbound payload bytes are hashed to generate immutable SHA-256 identifiers, exposed through `x-payload-sha256` headers to establish dataset provenance and lineage at the point of entry.
 
-- **`engine-kernel`**: A `#![no_std]` Rust core (`x86_64-unknown-none`) implementing coroutine scheduling (`KernelFiber`) and lock-free message/correspondence channels (`KernelChannel`). Designed around capability-based isolation primitives and deterministic execution boundaries.
+#### Token Gateway: `engine-ml`
 
-- **`engine-core`**: A typed research object registry defining structured scientific data contracts (`TopicNode`, `ResearchThreadObject`, `ScientificHypothesisNode`) with shared serialization semantics across native and `wasm32-unknown-unknown` targets.
+A token-aware inference and routing layer implementing BPE-based context accounting (`cl100k_base`), concurrent caching (`DashMap`), and multi-tier model execution across local and remote endpoints. All content traverses a strict validation pipeline enforced through `RouterAuditEnvelope`, while a hard pre-routing ceiling (`FALLBACK_CHUNK_WORD_LIMIT = 24_999`) guarantees bounded execution and deterministic chunking behavior before downstream processing.
 
-- **`engine-ml`**: An inference routing and token-aware scheduling layer implementing BPE-based context accounting (`cl100k_base`), concurrent caching strategies (`DashMap`), and multi-tier execution routing across local and remote model endpoints.
+#### Epistemic Matrix: `engine-core` 
 
-- **`engine-server`**: An event-driven Axum-based HTTP layer that streams and transforms external dataset shards (e.g., FineWeb-Edu, FinePDFs) into structured research artifacts and visualization outputs (D3.js, Obsidian-compatible Markdown).
+The primary reasoning substrate and typed scientific object registry. It defines structured research contracts such as `TopicNode`, `ResearchThreadObject`, and `ScientificHypothesisNode`, with shared serialization semantics across native and WebAssembly targets. Core analytical operations include structural intersections, conceptual overlap detection, and graph reasoning. These operations execute through pure Rust data structures (HashSet, typed collections), eliminating runtime Python dependencies from the mathematical execution path.
 
-- **`engine-wasm`**: A browser-compatible execution target exposing a constrained subset of `engine-core` for interactive visualization, lightweight inference, and research graph exploration.
+#### Simulation Twin: `engine-wasm`
+
+A browser-compatible execution target exposing a constrained, deterministic subset of `engine-core`. Compiled for `wasm32-unknown-unknown`, it enables interactive visualization, lightweight inference, and research graph exploration while maintaining execution parity with native implementations. Operating within browser-isolated execution environments, it provides a deterministic simulation twin free from native operating-system call dependencies.
+
+#### Deterministic Runtime Substrate: `engine-kernel`
+
+A `#![no_std]` Rust kernel (`x86_64-unknown-none`) implementing coroutine scheduling through `KernelFiber` and lock-free communication primitives via `KernelChannel`. The kernel provides capability-oriented isolation boundaries, deterministic scheduling semantics, and foundational execution primitives for future distributed or embedded deployments.
+
+#### Lineage Orchestrator: `optiserver`
+
+An asynchronous Python ASGI orchestration layer responsible for coordinating execution workflows, lineage tracking, experiment state management, and long-running analytical processes. Results are persisted through append-only JSONL logs, ensuring auditability, crash recovery, and replayability while allowing visualization layers such as Streamlit to remain stateless.
+
+### System Invariant
+
+Together, these components form a strict functional transformation pipeline:
+
+**Dataset Ingestion → Provenance Capture → Token Routing → Epistemic Computation → Simulation/Visualization → Lineage Persistence**
+
+Each stage exposes explicit contracts, preserves transformation history, and minimizes cross-layer coupling, enabling reproducible scientific workflows, deterministic execution paths, and future self-improving research loops.
 
 ## Architecture Overview
 
-```mermaid
-flowchart LR
+<p align="center">
+  <img src="docs/assets/hyperbolic-architecture.svg" alt="Hyperbolic Poincaré Disk System Topology" width="100%">
+</p>
 
-%% =========================
-%% External Systems & Ingest
-%% =========================
-User[Researcher / Agent / External Query]
-Datasets["External Corpora<br/>(FineWeb-Edu / FinePDFs)"]
-
-subgraph Engine["Scientific Intelligence Substrate"]
-    direction TB
-
-    Server["engine-server<br/>Axum HTTP Runtime<br/>• Streaming Ingestion<br/>• SHA-256 Provenance<br/>• Raw Bytes Pipeline"]
-
-    ML["engine-ml<br/>Inference Router<br/>• Proactive 24k Word Split Audit<br/>• Token Accounting & Context Budget<br/>• DashMap Cache Layer"]
-
-    Core["engine-core<br/>Research IR Layer<br/>• TopicNode / HypothesisNode<br/>• Deterministic Math / ResearchVectors<br/>• Lineage Contracts"]
-
-    Kernel["engine-kernel (no_std, x86_64)<br/>• Coroutine Scheduler<br/>• Capability Isolation<br/>• KernelChannel IPC"]
-
-    WASM["engine-wasm<br/>Browser Execution Target<br/>• Twin Simulation & Graph Vis<br/>• Lightweight Retrieval Layer"]
-    
-    UI["ui_dashboard<br/>Streamlit Interface<br/>Local MiKTeX"]
-end
-
-Cloud["Remote Model Endpoints"]
-Local["Local GPU Runtime"]
-Storage["Artifact Store & Optiserver<br/>(SQLite / Graph Logs)<br/>• JSONL Append Log Lineage"]
-
-%% =========================
-%% Data / Control Flow
-%% =========================
-User --> Server
-Datasets --> Server
-
-Server --> Core
-Server --> ML
-
-ML --> Local
-ML --> Cloud
-ML --> Core
-
-Core --> Kernel
-ML --> Kernel
-
-Kernel --> Storage
-Server --> Storage
-
-Core --> WASM
-Server --> WASM
-WASM --> UI
-UI --> User
-
-%% =========================
-%% Feedback Loops
-%% =========================
-ML -->|Inference Results| Server
-Server -->|Structured Artifacts| Core
-Core -->|Graph State| WASM
-WASM -->|Interaction Feedback| Server
-
-%% =========================
-%% Orthogonal Edge Routing
-%% =========================
-linkStyle default interpolate stepBefore
-
-```
+##### Figure 1: Poincaré Disk Projection of the Federated System-of-Systems Architecture
+The system topology is mapped using non-Euclidean hyperbolic spacing bounded within a thin circular perimeter frame. The state foundation (engine-core) acts as the origin point of coordinate space, retaining a linear, low-density aspect ratio at the center for operational clarity. Structural transformations radiate outward toward the perimeter along designated symbolic system-of-systems branches: the Perception Gateway ($\alpha$), the Compute Core ($\beta$), and the Ledger Complex ($\gamma$). Components are stylized uniformly using minimal, narrow rectangular text blocks with rounded boundaries to optimize space. As the tree approaches the boundary ring, spatial coordinates compress exponentially, visually demonstrating how complex terminal leaf runtime environments, such as browser-isolated execution twins (engine-wasm) and topological lineage storage repositories (optiserver)are structurally contained without polluting the primary execution path.
 
 ## Technical Specifications
 
