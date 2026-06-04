@@ -1,5 +1,6 @@
 use engine_core::compute;
 use engine_core::compute::wave::Wavefield;
+use engine_core::{residual_error, simulate_twin, TwinKind, TwinState};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(start)]
@@ -31,6 +32,92 @@ pub fn wasm_sieve(n: usize) -> Vec<usize> {
 pub fn wasm_step_wavefield(ptr: *mut f32, len: usize, c: f32, dt: f32, dx: f32) {
     let slice = unsafe { std::slice::from_raw_parts_mut(ptr, len) };
     compute::wave::step_wavefield(slice, c, dt, dx);
+}
+
+#[wasm_bindgen]
+#[derive(Debug, Clone, Copy)]
+pub enum WasmTwinKind {
+    SoftwareSupplyChain,
+    FactoryAutomation,
+    RegionalEnergyGrid,
+}
+
+#[wasm_bindgen]
+pub struct WasmTwinState {
+    resilience: f32,
+    throughput: f32,
+    risk: f32,
+}
+
+#[wasm_bindgen]
+impl WasmTwinState {
+    #[wasm_bindgen(constructor)]
+    pub fn new(resilience: f32, throughput: f32, risk: f32) -> WasmTwinState {
+        WasmTwinState {
+            resilience,
+            throughput,
+            risk,
+        }
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn resilience(&self) -> f32 {
+        self.resilience
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn throughput(&self) -> f32 {
+        self.throughput
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn risk(&self) -> f32 {
+        self.risk
+    }
+}
+
+#[wasm_bindgen]
+pub fn wasm_simulate_twin(
+    kind: WasmTwinKind,
+    baseline: &WasmTwinState,
+    intervention: f32,
+    steps: u32,
+) -> WasmTwinState {
+    let state = simulate_twin(
+        twin_kind(kind),
+        TwinState {
+            resilience: baseline.resilience,
+            throughput: baseline.throughput,
+            risk: baseline.risk,
+        },
+        intervention,
+        steps,
+    );
+    WasmTwinState::new(state.resilience, state.throughput, state.risk)
+}
+
+#[wasm_bindgen]
+pub fn wasm_residual_error(predicted: &WasmTwinState, actual: &WasmTwinState) -> f32 {
+    residual_error(
+        TwinState {
+            resilience: predicted.resilience,
+            throughput: predicted.throughput,
+            risk: predicted.risk,
+        },
+        TwinState {
+            resilience: actual.resilience,
+            throughput: actual.throughput,
+            risk: actual.risk,
+        },
+    )
+}
+
+fn twin_kind(kind: WasmTwinKind) -> TwinKind {
+    match kind {
+        WasmTwinKind::SoftwareSupplyChain => TwinKind::SoftwareSupplyChain,
+        WasmTwinKind::FactoryAutomation => TwinKind::FactoryAutomation,
+        WasmTwinKind::RegionalEnergyGrid => TwinKind::RegionalEnergyGrid,
+    }
 }
 
 //
