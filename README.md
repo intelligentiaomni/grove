@@ -44,6 +44,17 @@ The system is modeled as a retrieval-conditioned state transition system over a 
 - Local-first compute with tiered routing across on-device execution, cluster resources, and external model endpoints.
 - Hybrid symbolic–neural workflows integrating graph-based representations with learned models for inference and retrieval.
 
+## Evolution & Lineage
+
+The system enforces a strict functional transformation passthrough that decouples network ingestion, token auditing, core mathematical logic, and analytics.
+
+### Decoupled Subsystem Contracts
+1. **`engine-server` (Ingress Boundary)**: Processes inbound dataset payload bytes (FineWeb-Edu / FinePDFs) to compute unique SHA-256 signatures before UTF-8 string conversions, exposing metrics via `x-payload-sha256` headers.
+2. **`engine-ml` (Token Gateway)**: Enforces a strict pre-routing hard ceiling at `FALLBACK_CHUNK_WORD_LIMIT = 24_999` to split blocks before processing. Standardizes validation states through `RouterAuditEnvelope`.
+3. **`engine-core` (Epistemic Matrix)**: Leverages pure Rust collections (`HashSet`) to run cross-parent structural intersections and conceptual similarity calculations without runtime Python overhead.
+4. **`engine-wasm` (Simulation Twin)**: Exposes browser-isolated mathematical twin algorithms via deterministic assembly layers free of native operating system call profiles.
+5. **`optiserver` (Python Orchestrator)**: Processes lineage tracking states through an asynchronous ASGI server, storing results in persistent JSONL append-logs so the Streamlit visualization stack remains stateless and crash-resilient.
+
 ## Architecture Topology
 
 - **`engine-kernel`**: A `#![no_std]` Rust core (`x86_64-unknown-none`) implementing coroutine scheduling (`KernelFiber`) and lock-free message/correspondence channels (`KernelChannel`). Designed around capability-based isolation primitives and deterministic execution boundaries.
@@ -59,32 +70,71 @@ The system is modeled as a retrieval-conditioned state transition system over a 
 ## Architecture Overview
 
 ```mermaid
-flowchart TD
-    User["Researcher / Agent"]
-    Server["engine-server<br/>Axum HTTP<br/>Streaming ingest"]
-    Core["engine-core<br/>Research IR<br/>Lineage contracts"]
-    ML["engine-ml<br/>Inference router<br/>Token auditing"]
-    Kernel["engine-kernel<br/>no_std scheduler<br/>KernelChannel IPC"]
-    WASM["engine-wasm<br/>Browser target<br/>Twin simulation"]
-    Datasets["External corpora<br/>FineWeb-Edu / FinePDFs"]
-    Local["Local GPU runtime"]
-    Cloud["Remote model endpoints"]
-    Storage["Artifact store<br/>SQLite / graph logs"]
+flowchart LR
 
-    User --> Server
-    Datasets --> Server
-    Server --> Core
-    Server --> ML
-    ML --> Local
-    ML --> Cloud
-    ML --> Core
-    Core --> Kernel
-    ML --> Kernel
-    Kernel --> Storage
-    Server --> Storage
-    Core --> WASM
-    Server --> WASM
-    WASM --> User
+%% =========================
+%% External Systems & Ingest
+%% =========================
+User[Researcher / Agent / External Query]
+Datasets["External Corpora<br/>(FineWeb-Edu / FinePDFs)"]
+
+subgraph Engine["Scientific Intelligence Substrate"]
+    direction TB
+
+    Server["engine-server<br/>Axum HTTP Runtime<br/>• Streaming Ingestion<br/>• SHA-256 Provenance<br/>• Raw Bytes Pipeline"]
+
+    ML["engine-ml<br/>Inference Router<br/>• Proactive 24k Word Split Audit<br/>• Token Accounting & Context Budget<br/>• DashMap Cache Layer"]
+
+    Core["engine-core<br/>Research IR Layer<br/>• TopicNode / HypothesisNode<br/>• Deterministic Math / ResearchVectors<br/>• Lineage Contracts"]
+
+    Kernel["engine-kernel (no_std, x86_64)<br/>• Coroutine Scheduler<br/>• Capability Isolation<br/>• KernelChannel IPC"]
+
+    WASM["engine-wasm<br/>Browser Execution Target<br/>• Twin Simulation & Graph Vis<br/>• Lightweight Retrieval Layer"]
+    
+    UI["ui_dashboard<br/>Streamlit Interface<br/>Local MiKTeX"]
+end
+
+Cloud["Remote Model Endpoints"]
+Local["Local GPU Runtime"]
+Storage["Artifact Store & Optiserver<br/>(SQLite / Graph Logs)<br/>• JSONL Append Log Lineage"]
+
+%% =========================
+%% Data / Control Flow
+%% =========================
+User --> Server
+Datasets --> Server
+
+Server --> Core
+Server --> ML
+
+ML --> Local
+ML --> Cloud
+ML --> Core
+
+Core --> Kernel
+ML --> Kernel
+
+Kernel --> Storage
+Server --> Storage
+
+Core --> WASM
+Server --> WASM
+WASM --> UI
+UI --> User
+
+%% =========================
+%% Feedback Loops
+%% =========================
+ML -->|Inference Results| Server
+Server -->|Structured Artifacts| Core
+Core -->|Graph State| WASM
+WASM -->|Interaction Feedback| Server
+
+%% =========================
+%% Orthogonal Edge Routing
+%% =========================
+linkStyle default interpolate stepBefore
+
 ```
 
 ## Technical Specifications
