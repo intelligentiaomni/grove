@@ -82,10 +82,10 @@ Each stage exposes explicit contracts, preserves transformation history, and min
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs\assets\hyperbolic_architecture_dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="docs\assets\hyperbolic_architecture.svg">
-    <img src="docs\assets\hyperbolic_architecture.svg" alt="Topology Map">
-  </picture><br>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/intelligentiaomni/grove/refs/heads/main/docs/assets/hyperbolic_architecture.svg_dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/intelligentiaomni/grove/refs/heads/main/docs/assets/hyperbolic_architecture.svg">
+    <img src="https://raw.githubusercontent.com/intelligentiaomni/grove/refs/heads/main/docs/assets/hyperbolic_architecture.svg" alt="Topology Map">
+  </picture>
 </p>
 
 <sub><b>Figure 1: Poincaré Disk Projection of the Architecture.</b> Nodes radiate from the central core across three main branches, compressing exponentially toward the perimeter. This layout demonstrates how complex terminal runtimes are structurally contained without cluttering the primary execution path.</sub>
