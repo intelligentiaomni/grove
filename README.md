@@ -84,7 +84,7 @@ Each stage exposes explicit contracts, preserves transformation history, and min
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/hyperbolic_architecture_dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/assets/hyperbolic_architecture.svg">
-    <img src="docs/assets/hyperbolic-architecture.svg" alt="Topology Map">
+    <img src="docs/assets/hyperbolic_architecture.svg" alt="Topology Map">
   </picture><br>
   <sub><b>Figure 1: Poincaré Disk Projection of the Architecture</b> Nodes radiate from the central core across three main branches, compressing exponentially toward the perimeter. This layout demonstrates how complex terminal runtimes are structurally contained without cluttering the primary execution path.</sub>
 </p>
