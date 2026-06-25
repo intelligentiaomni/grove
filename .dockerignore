@@ -1,0 +1,13 @@
+# Ignore local compilation caches
+target/
+**/*.tmp
+
+# Ignore local ledger databases and tracking files
+*.json
+*.md
+outputs/
+
+# Ignore development Git history and documentation scripts
+.git/
+.gitignore
+scripts/
