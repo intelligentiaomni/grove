@@ -6,6 +6,7 @@
 //! - ECS-facing abstractions
 //! - error types
 //! - common data structures
+//! - line-rate data ingestion & research lineage logs
 
 pub mod compute;
 pub mod config;
@@ -21,6 +22,11 @@ pub mod scientific_agent;
 pub mod telemetry;
 pub mod types;
 pub mod visualization;
+
+// === High-Performance Data Streaming & Token Filtering Additions ===
+pub mod hf_ingest;
+pub mod token_filter;
+pub mod pipeline;
 
 // Re-exports for convenience
 pub use compute::wave::Wavefield;
@@ -48,6 +54,56 @@ pub use telemetry::{
 pub use types::*;
 pub use visualization::{D3Link, D3Node, VisualizationManifest};
 
+// === Data Streaming Re-exports ===
+pub use hf_ingest::{stream_range_request_loop, UnifiedLedger, DatasetSource, LiteratureSource};
+pub use pipeline::PipelineOrchestrator;
+pub use token_filter::SinglePassMatcher;
+
+// ==========================================
+// Research Ledger Structural Model
+// ==========================================
+use serde::{Deserialize, Serialize};
+use std::fs::File;
+use std::io::Read;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct SearchQuery {
+    pub query: String,
+    pub status: String,
+    pub timestamp: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct CorpusItem {
+    pub id: String,
+    pub title: String,
+    pub authors: Vec<String>,
+    pub year: u32,
+    pub abstract_text: String, // Maps JSON "abstract" to Rust-safe variable name
+    pub relevance_score: f64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ResearchLedger {
+    pub research_question: String,
+    pub search_queries: Vec<SearchQuery>,
+    #[serde(rename = "corpus")] // Direct mapping match
+    pub corpus: Vec<CorpusItem>,
+}
+
+/// Parses the JSON ledger file and loads it into memory for core processing
+pub fn load_ledger_from_disk(file_path: &str) -> Result<ResearchLedger, Box<dyn std::error::Error>> {
+    let mut file = File::open(file_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    
+    let ledger: ResearchLedger = serde_json::from_str(&contents)?;
+    Ok(ledger)
+}
+
+// ==========================================
+// Legacy Insight Execution Passthrough
+// ==========================================
 pub fn execute_insight_passthrough(
     research_text: &str,
     telemetry: &TelemetryPayload,

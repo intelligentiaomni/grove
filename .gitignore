@@ -63,6 +63,12 @@ outputs/
 *.bak
 *.log
 
+# Prevents Git from tracking live data engine mutations inside the crate layout
+/engine/engine-core/ledger/*.json
+/engine/engine-core/ledger/*.jsonl
+/engine/engine-core/ledger/*.tmp
+/engine/engine-core/ledger/*.lock
+
 # ==========================================
 # Credentials & Environment Secrets
 # ==========================================
