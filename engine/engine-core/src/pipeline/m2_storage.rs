@@ -1,8 +1,8 @@
+use crate::ledger::UnifiedLedger;
+use fs2::FileExt; // Brings trait for lock_exclusive into scope
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
-use fs2::FileExt; // Brings trait for lock_exclusive into scope
-use crate::hf_ingest::UnifiedLedger;
 
 pub struct LedgerStorageManager {
     file_path: String,
@@ -22,9 +22,12 @@ impl LedgerStorageManager {
 
     /// Safely updates the ledger on disk using an atomic swap strategy.
     /// It locks the target file, writes to a shadow temp file, and swaps them to prevent corruption.
-    pub fn transactional_commit(&self, runtime_ledger: &UnifiedLedger) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn transactional_commit(
+        &self,
+        runtime_ledger: &UnifiedLedger,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let target_path = Path::new(&self.file_path);
-        
+
         // 1. Open or create the primary lockfile to block other processes (like Python)
         let lock_path = target_path.with_extension("lock");
         let lock_file = OpenOptions::new()
@@ -32,17 +35,17 @@ impl LedgerStorageManager {
             .write(true)
             .create(true)
             .open(&lock_path)?;
-            
+
         // Block thread until an exclusive OS lock is acquired
         lock_file.lock_exclusive()?;
 
         // 2. Write the new JSON state to a temporary sibling file (.json.tmp)
         let temp_path = target_path.with_extension("tmp");
         let mut temp_file = File::create(&temp_path)?;
-        
+
         let serialized_data = serde_json::to_string_pretty(runtime_ledger)?;
         temp_file.write_all(serialized_data.as_bytes())?;
-        
+
         // Force OS kernel memory page cache to flush cleanly to physical silicon
         temp_file.sync_all()?;
 
@@ -52,7 +55,7 @@ impl LedgerStorageManager {
 
         // 4. Release the lock explicitly
         lock_file.unlock()?;
-        
+
         Ok(())
     }
 
@@ -69,7 +72,7 @@ impl LedgerStorageManager {
             .write(true)
             .create(true)
             .open(lock_path)?;
-        
+
         // Acquire shared read lock (multiple readers can read, but writers will block)
         lock_file.lock_shared()?;
 

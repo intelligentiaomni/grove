@@ -16,6 +16,7 @@ pub mod error;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod graph_lineage;
 pub mod insight_accelerator;
+pub mod ledger;
 pub mod math;
 pub mod research;
 pub mod scientific_agent;
@@ -24,9 +25,8 @@ pub mod types;
 pub mod visualization;
 
 // === High-Performance Data Streaming & Token Filtering Additions ===
-pub mod hf_ingest;
-pub mod token_filter;
 pub mod pipeline;
+pub mod token_filter;
 
 // Re-exports for convenience
 pub use compute::wave::Wavefield;
@@ -55,7 +55,9 @@ pub use types::*;
 pub use visualization::{D3Link, D3Node, VisualizationManifest};
 
 // === Data Streaming Re-exports ===
-pub use hf_ingest::{stream_range_request_loop, UnifiedLedger, DatasetSource, LiteratureSource};
+pub use ledger::{
+    process_verified_stream_loop, DatasetSource, LedgerStreamError, LiteratureSource, UnifiedLedger,
+};
 pub use pipeline::PipelineOrchestrator;
 pub use token_filter::SinglePassMatcher;
 
@@ -92,11 +94,13 @@ pub struct ResearchLedger {
 }
 
 /// Parses the JSON ledger file and loads it into memory for core processing
-pub fn load_ledger_from_disk(file_path: &str) -> Result<ResearchLedger, Box<dyn std::error::Error>> {
+pub fn load_ledger_from_disk(
+    file_path: &str,
+) -> Result<ResearchLedger, Box<dyn std::error::Error>> {
     let mut file = File::open(file_path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
-    
+
     let ledger: ResearchLedger = serde_json::from_str(&contents)?;
     Ok(ledger)
 }

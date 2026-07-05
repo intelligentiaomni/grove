@@ -5,19 +5,19 @@ pub mod m5_replay;
 pub mod m6_metrics;
 pub mod m7_optimizer;
 
-use crate::token_filter::SinglePassMatcher;
-use crate::hf_ingest::{UnifiedLedger, SourcesContainer};
-use crate::pipeline::m2_storage::LedgerStorageManager; 
+use crate::ledger::{SourcesContainer, UnifiedLedger};
+use crate::pipeline::m2_storage::LedgerStorageManager;
 use crate::pipeline::m6_metrics::{StreamProfiler, TransitionMetrics};
-use m1_state::{PipelineState, IngestionAction, StateTransitionEngine};
-use m3_recording::{PipelineObserver, AuditLogger};
+use crate::token_filter::SinglePassMatcher;
+use m1_state::{IngestionAction, PipelineState, StateTransitionEngine};
+use m3_recording::{AuditLogger, PipelineObserver};
 
 pub struct PipelineOrchestrator {
     pub state: PipelineState,
     pub matcher: SinglePassMatcher,
     pub logger: AuditLogger,
     /// Memory collection tracking every event for verification or replay exports
-    pub action_history: Vec<IngestionAction>, 
+    pub action_history: Vec<IngestionAction>,
     /// Accumulated runtime telemetry records for pipeline benchmarking
     pub performance_log: Vec<TransitionMetrics>,
     /// Background optimizer task handler for thread runtime stalling
@@ -30,7 +30,7 @@ impl PipelineOrchestrator {
         Self {
             state: PipelineState {
                 datasets: Vec::new(),
-                literature: Vec::new(), 
+                literature: Vec::new(),
                 current_bytes_processed: 0,
             },
             matcher: SinglePassMatcher::compile(),
@@ -56,7 +56,7 @@ impl PipelineOrchestrator {
         let (optional_topics, metrics) = StreamProfiler::profile_block_structured(
             "Aho-Corasick State Machine",
             byte_count,
-            || self.matcher.scan_raw_bytes(raw_bytes)
+            || self.matcher.scan_raw_bytes(raw_bytes),
         );
 
         // Save and print out the metric data immediately
@@ -80,11 +80,10 @@ impl PipelineOrchestrator {
         let byte_count = raw_network_bytes.len();
         self.state.current_bytes_processed += byte_count as u64;
 
-        let optional_topics = StreamProfiler::profile_block(
-            "Aho-Corasick Token Filter", 
-            byte_count, 
-            || self.matcher.scan_raw_bytes(raw_network_bytes)
-        );
+        let optional_topics =
+            StreamProfiler::profile_block("Aho-Corasick Token Filter", byte_count, || {
+                self.matcher.scan_raw_bytes(raw_network_bytes)
+            });
 
         if let Some(topics) = optional_topics {
             let action = IngestionAction::BindExtractedNodes {
@@ -100,7 +99,7 @@ impl PipelineOrchestrator {
     /// Commits the active memory-state down into a structured ledger file safely
     pub fn persist_to_disk(&self, disk_path: &str) -> Result<(), Box<dyn std::error::Error>> {
         let storage = LedgerStorageManager::new(disk_path);
-        
+
         let exportable_ledger = UnifiedLedger {
             research_question: "How can early stopping criteria be optimized to prevent overfitting in edge-computing environments with strict hardware and memory limits?".to_string(),
             sources: SourcesContainer {
@@ -110,7 +109,10 @@ impl PipelineOrchestrator {
         };
 
         storage.transactional_commit(&exportable_ledger)?;
-        println!("[STORAGE] Safe transaction sync complete. Written to: {}", disk_path);
+        println!(
+            "[STORAGE] Safe transaction sync complete. Written to: {}",
+            disk_path
+        );
         Ok(())
     }
 }

@@ -1,4 +1,4 @@
-use crate::hf_ingest::{DatasetSource, LiteratureSource};
+use crate::ledger::{DatasetSource, LiteratureSource};
 
 #[derive(Clone, Debug)]
 pub struct PipelineState {
@@ -10,9 +10,20 @@ pub struct PipelineState {
 // Added Clone here to resolve the E0277 and E0599 orchestrator/replay crashes
 #[derive(Debug, Clone)]
 pub enum IngestionAction {
-    RegisterDatasetTarget { repo: String, file: String, range: String },
-    BindExtractedNodes { source_id: String, nodes: Vec<String> },
-    CommitLiteraturePaper { id: String, title: String, nodes: Vec<String> },
+    RegisterDatasetTarget {
+        repo: String,
+        file: String,
+        range: String,
+    },
+    BindExtractedNodes {
+        source_id: String,
+        nodes: Vec<String>,
+    },
+    CommitLiteraturePaper {
+        id: String,
+        title: String,
+        nodes: Vec<String>,
+    },
 }
 
 pub struct StateTransitionEngine;
@@ -24,12 +35,12 @@ impl StateTransitionEngine {
                 // Generates initial state node before byte-stream processing begins
                 let dummy_hash = format!("pending_sha_{}", file);
                 state.datasets.push(DatasetSource {
-                    id: dummy_hash, 
-                    repo, 
+                    id: dummy_hash,
+                    repo,
                     split: "train".to_string(),
-                    parquet_file: file, 
+                    parquet_file: file,
                     byte_range: range,
-                    extracted_topics: Vec::new(), 
+                    extracted_topics: Vec::new(),
                     provenance_node_bound: false,
                 });
             }
@@ -43,12 +54,12 @@ impl StateTransitionEngine {
             }
             IngestionAction::CommitLiteraturePaper { id, title, nodes } => {
                 state.literature.push(LiteratureSource {
-                    id, 
-                    repo: "huggingface/papers".to_string(), 
+                    id,
+                    repo: "huggingface/papers".to_string(),
                     title,
-                    authors: vec![], 
+                    authors: vec![],
                     doi_or_url: String::new(),
-                    extracted_nodes: nodes, 
+                    extracted_nodes: nodes,
                     download_timestamp: "2026-06-25T15:00:00Z".to_string(),
                 });
             }

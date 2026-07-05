@@ -1,0 +1,240 @@
+## Internal Architecture Overview
+```text
+└── .dockerignore
+└── .gitattributes
+└── .gitignore
+└── Cargo.lock
+└── Cargo.toml
+└── generate_docs.py
+└── LICENSE
+└── Makefile
+└── mkdocs.yml
+└── NOTICE
+└── README.md
+├── .github/
+    └── SECURITY.md
+    └── SPONSORS.md
+├── apps/
+    ├── cli/
+        └── .gitkeep
+    ├── notebooks/
+        └── .gitkeep
+    ├── web/
+        └── .gitkeep
+├── components/
+    └── footer.tsx
+    └── hero.tsx
+    └── navbar.tsx
+    └── section.tsx
+    ├── badges/
+        └── discord-badge.tsx
+        └── github-badge.tsx
+├── config/
+    └── env.example
+├── core/
+    └── fragment.py
+    └── __init__.py
+    ├── evidence/
+        └── __init__.py
+        ├── metrics/
+            └── .gitkeep
+            └── robustness_auc.py
+            └── robustness_mae.py
+            └── __init__.py
+        ├── validators/
+            └── .gitkeep
+            └── robustness.py
+            └── threshold_crossing.py
+            └── __init__.py
+    ├── extractor/
+        └── extractor.py
+        └── population.py
+    ├── reasoning/
+        ├── chains/
+            └── .gitkeep
+        ├── evaluators/
+            └── .gitkeep
+        ├── planners/
+            └── .gitkeep
+    ├── simulation/
+        ├── chemistry/
+            └── .gitkeep
+        ├── physics/
+            └── .gitkeep
+        ├── workflows/
+            └── .gitkeep
+├── data/
+    ├── RAM/
+        └── fragments.json
+├── docs/
+    └── architecture.md
+    ├── architecture/
+        └── .gitkeep
+    ├── assets/
+        └── architecture.mmd
+        └── architecture.svg
+        └── architecture_overview.mmd
+        └── architecture_overview_v02.mmd
+        └── hyperbolic_architecture.svg
+        └── hyperbolic_architecture.svg_dark.svg
+    ├── modules/
+        └── .gitkeep
+    ├── roadmap/
+        └── .gitkeep
+    ├── theory/
+        └── formalism.md
+        └── formalism_v02.md
+├── engine/
+    ├── engine-core/
+        └── Cargo.toml
+        ├── ledger/
+            └── ledger.json
+            └── transitions.jsonl
+        ├── src/
+            └── config.rs
+            └── correspondence.rs
+            └── ecs.rs
+            └── error.rs
+            └── graph_lineage.rs
+            └── hf_ingest.rs
+            └── insight_accelerator.rs
+            └── lib.rs
+            └── main.rs
+            └── math.rs
+            └── research.rs
+            └── scientific_agent.rs
+            └── telemetry.rs
+            └── tests.rs
+            └── token_filter.rs
+            └── types.rs
+            └── visualization.rs
+            ├── compute/
+                └── mod.rs
+                └── sieve.rs
+                └── wave.rs
+            ├── graph_ir/
+                └── execution.rs
+                └── graph.rs
+            ├── pipeline/
+                └── m1_state.rs
+                └── m2_storage.rs
+                └── m3_recording.rs
+                └── m5_replay.rs
+                └── m6_metrics.rs
+                └── m7_optimizer.rs
+                └── mod.rs
+    ├── engine-kernel/
+        └── Cargo.toml
+        ├── src/
+            └── concurrency.rs
+            └── fibers.rs
+            └── lib.rs
+    ├── engine-ml/
+        └── Cargo.toml
+        ├── src/
+            └── dynamic_router.rs
+            └── inference.rs
+            └── lib.rs
+            └── prefix_control.rs
+            └── scheduler.rs
+            └── scientific_reasoner.rs
+    ├── engine-mm/
+        ├── src/
+            └── lib.rs
+    ├── engine-server/
+        └── Cargo.toml
+        ├── src/
+            └── main.rs
+            └── research_bus.rs
+            └── viz_exporter.rs
+    ├── engine-wasm/
+        └── Cargo.toml
+        ├── src/
+            └── lib.rs
+    ├── fusion/
+        └── multimodal_fuser.py
+    ├── sequences/
+        └── sequence.py
+    ├── vision/
+        └── vision.py
+    ├── wavefields/
+        └── wave.py
+├── experiments/
+    ├── 2025-11-rothko-wasm/
+        └── index.html
+        └── main.js
+    ├── 2025-11-wavefield-sieve/
+        └── index.html
+        └── main.js
+        └── README.md
+        └── styles.css
+        └── wavefield.frag
+        └── wavefield.vert
+        ├── code/
+            └── .gitkeep
+        ├── data/
+            └── .gitkeep
+    ├── pipelines/
+        ├── robustness_eval/
+            └── build.ps1
+            └── README.md
+            ├── capsule/
+                └── pipeline.yaml
+            ├── notebooks/
+                └── robustness_analysis.ipynb
+                ├── .ipynb_checkpoints/
+                    └── robustness_analysis-checkpoint.ipynb
+            ├── outputs/
+                ├── figures/
+            ├── src/
+                └── run.py
+        ├── triggers/
+            └── .gitkeep
+├── lib/
+    └── config.ts
+    └── utils.ts
+├── optiserver/
+    └── Dockerfile
+    └── optimization_core.py
+    └── requirements.txt
+    └── server.py
+    └── ui_dashboard.py
+├── output/
+├── pages/
+    └── about.tsx
+    └── index.tsx
+    ├── api/
+        ├── ping/
+            └── route.ts
+        ├── simulate/
+            └── route.ts
+        ├── submit/
+            └── route.ts
+    ├── research/
+        └── .gitkeep
+├── platform/
+    ├── dashboard/
+        └── .gitkeep
+    ├── export/
+        └── .gitkeep
+    ├── literature/
+        └── .gitkeep
+    ├── tradeoff_visualizer/
+        └── .gitkeep
+├── public/
+    ├── assets/
+        ├── visuals/
+            └── .gitkeep
+            └── information_topology_banner_dark.png
+            └── information_topology_banner_light.png
+            └── rothko_frame_1080.png
+├── scripts/
+    └── build_wasm.sh
+    └── capture_frames.sh
+    └── generate_pdf.py
+    └── hf_ledger_sync.py
+    └── m4_visualizer.py
+    └── pipeline.py
+├── styles/
+    └── globals.css
+```
