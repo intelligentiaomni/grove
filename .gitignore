@@ -1,8 +1,9 @@
+# updated .gitignore
+
 # ==========================================
 # Python & Jupyter
 # ==========================================
 __pycache__/
-*.pyc
 *.py[cod]
 *$py.class
 *.pyo
@@ -18,14 +19,17 @@ dist/
 *.egg-info/
 
 # ==========================================
-# Rust Core Engine
+# Rust Workspace
 # ==========================================
 target/
 **/target/
+
+# Libraries should not commit Cargo.lock.
+# Uncomment if Grove later ships executable applications.
 Cargo.lock
 
 # ==========================================
-# Frontend Node / Next.js
+# Frontend (Node / Next.js)
 # ==========================================
 node_modules/
 .next/
@@ -33,56 +37,81 @@ out/
 coverage/
 
 # ==========================================
-# Pipeline Auto-Generated Artifacts & Caches
+# Docker
 # ==========================================
-# Extractor auto-generated state
-/Extractor/population.json
-/Extractor/history.csv
-/Extractor/*.tmp
-
-# RAM-derived caches or embeddings
-/RAM/**/*.emb
-/RAM/**/*.cache
-
-# Logs / Theory / Experiments Temp
-/Logs/**/*.tmp
-/Theory/**/*.tmp
-experiments/**/results/
-experiments/**/logs/
-results/
-logs/
+.docker/
 
 # ==========================================
-# Ledger Databases & Runtime Swaps
+# Runtime Logs & Temporary Files
 # ==========================================
-# Restricts JSON/MD ignoring to the outputs workspace to protect configuration source files
-/outputs/**/*.json
-/outputs/**/*.md
-outputs/
 *.tmp
 *.bak
 *.log
+*.pid
 
-# Prevents Git from tracking live data engine mutations inside the crate layout
-/engine/engine-core/ledger/*.json
-/engine/engine-core/ledger/*.jsonl
-/engine/engine-core/ledger/*.tmp
-/engine/engine-core/ledger/*.lock
+logs/
+results/
 
 # ==========================================
-# Credentials & Environment Secrets
+# Data Pipeline Storage (Local MVP)
+# ==========================================
+data/raw/
+data/interim/
+data/processed/
+
+# ==========================================
+# Research Pipeline Artifacts
+# ==========================================
+Extractor/population.json
+Extractor/history.csv
+Extractor/*.tmp
+
+RAM/**/*.emb
+RAM/**/*.cache
+
+Logs/**/*.tmp
+Theory/**/*.tmp
+
+experiments/**/results/
+experiments/**/logs/
+
+# ==========================================
+# Generated Outputs
+# ==========================================
+outputs/
+outputs/**/*.json
+outputs/**/*.md
+
+# ==========================================
+# Engine Runtime State
+# ==========================================
+engine/engine-core/ledger/*.json
+engine/engine-core/ledger/*.jsonl
+engine/engine-core/ledger/*.tmp
+engine/engine-core/ledger/*.lock
+
+# ==========================================
+# Environment & Secrets
 # ==========================================
 .env
 .env.local
 .env.*.local
 
+# Keep templates
+!.env.example
+!.env.production
+
 # ==========================================
-# System, OS, & Editor Workspaces
+# IDE / Editor
+# ==========================================
+.vscode/
+.idea/
+.cache/
+
+# ==========================================
+# Operating System
 # ==========================================
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
-.vscode/
-.idea/
-.cache/
