@@ -1,4 +1,23 @@
 services:
+  engine-api:
+    build:
+      context: ./services
+    environment:
+      GROVE_ROOT: /repo
+      GROVE_LEDGER_DIR: /repo/ledger
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/repo
+
+  ui:
+    build:
+      context: ./ui
+    ports:
+      - "5173:80"
+    depends_on:
+      - engine-api
+
   postgres:
     image: postgres:17
     environment:

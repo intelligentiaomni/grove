@@ -1,0 +1,5 @@
+{
+  "name": "reactor-alpha-telemetry.csv",
+  "type": "csv",
+  "content": "timestamp,sensor,value\n2026-07-21T12:00:00Z,temp-A,68.2\n2026-07-21T12:01:00Z,temp-A,69.1\n2026-07-21T12:02:00Z,temp-A,70.4\n2026-07-21T12:03:00Z,temp-A,71.0\n2026-07-21T12:04:00Z,temp-A,72.3\n"
+}

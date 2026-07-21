@@ -1,147 +1,143 @@
-<div align="center">
+# Grove
 
-<!-- Banner -->
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public\assets\visuals\information_topology_banner_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="public\assets\visuals\information_topology_banner_light.png">
-  <img alt="Engine System Banner" src="public\assets\visuals\information_topology_banner_light.png" style="max-width: 100%;">
-</picture>
+## Forecasts with Machine-Verifiable Provenance
 
-<!-- Badges -->
-<p align="center">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-passing-brightgreen">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0--alpha-blueviolet">
-</p>
+Grove is a provenance-aware AI computation engine that transforms heterogeneous datasets into traceable forecasts. Every transformation, prediction, and optimization step is represented as a lineage graph and recorded in an append-only ledger, allowing developers and researchers to inspect how results were produced instead of treating AI outputs as opaque black boxes.
 
-</div>
+In one sentence: Grove makes AI forecasts reproducible by treating provenance as a first-class part of computation rather than an afterthought.
 
----
+## Abstract
 
-# Scientific Intelligence Substrate
+Suppose a team receives telemetry from hundreds of sensors, research papers, and incident reports. Existing workflows summarize those inputs. Grove instead builds a provenance graph, computes forecasts, and records every inference in an immutable lineage ledger. The result is not merely a prediction, but a forecast whose inputs, transformations, intermediate computations, confidence, and recommendation path can be queried by humans and machines.
 
-Grove is a high-concurrency, sovereign scientific discovery substrate engineered in Rust, leveraging computational infrastructure for resilient scientific organizations. This system executes literature triangulation, epistemic filtering, and data extraction over text payloads scaling up to 120,000 tokens while enabling data sovereignty via a bare-metal microkernel boundary.
+The technical contribution is the combination of data lineage, forecasting, and reproducibility in a single execution engine. Many systems can produce predictions; far fewer can answer: exactly which inputs, transformations, and intermediate computations produced this forecast?
 
-## TL;DR
+## Problem
 
-A Rust-native scientific intelligence substrate for resilient, local-first research operations; The system combines asynchronous inference orchestration, graph-structured scientific memory, reproducible data pipelines, and minimized external data exposure model routing into a modular architecture for high-leverage research micro-teams. Integrating open-weight models, automated literature ingestion, and hybrid symbolic/neural workflows, the engine-core investigates how computational infrastructure can amplify scientific iteration speed while reducing institutional overhead and operational fragility.
+AI systems are increasingly used in research, engineering, operations, and regulated domains, but their outputs are often detached from the computation path that produced them. A dashboard may show a forecast, yet the user cannot easily inspect:
 
-## Core Thesis
+- which raw records were consumed
+- which parser and feature extraction steps touched the data
+- which intermediate graph nodes influenced the result
+- which confidence estimate was computed
+- which optimization or recommendation step followed
+- which immutable evidence exists for later audit
 
-> Massive scale breeds fragility; minimal footprint yields resilience.
+This opacity slows debugging, weakens trust, and makes scientific or operational replay difficult.
 
-Modern computation dramatically reduces the minimum viable scale required for advanced scientific operations. Open-weight models, cloud infrastructure, adaptive modular pipelines, and global scientific literature access enable research at more compressed scales, that previously required large institutional coordination layers. One strong systems architecture can amplify an entire organization. If a technical paradigm shifts, a micro-lab can rewrite its automated pipeline over a weekend.  
+## Solution
 
-## Formalism
+Grove treats provenance as part of the computation itself. Each execution moves through a small, inspectable pipeline:
 
-The system is modeled as a retrieval-conditioned state transition system over a persistent graph-structured memory space, where execution evolves distributed state via graph-retrieved action policies and deterministic transition dynamics.
-
-## Systems Direction
-
-- Scientific intelligence substrate for structured knowledge representation and long-horizon reasoning.
-- Reproducibility as a first-class constraint across data ingestion, inference, and evaluation pipelines.
-- Local-first compute with tiered routing across on-device execution, cluster resources, and external model endpoints.
-- Hybrid symbolic–neural workflows integrating graph-based representations with learned models for inference and retrieval.
-
-### Architecture and Execution Lineage
-
-The Grove engine is organized as a lineage-preserving, deterministic research execution stack. Each subsystem owns a distinct transformation boundary of ingestion, routing, reasoning, simulation, or orchestration, allowing provenance, reproducibility, and execution semantics to remain explicit across the entire pipeline.
-
-#### Ingress Boundary: `engine-server` 
-
-An event-driven Axum-based HTTP layer responsible for acquiring, streaming, and transforming external datasets (e.g., FineWeb-Edu, FinePDFs) into structured research artifacts and visualization outputs (D3.js, Obsidian-compatible Markdown). Prior to any UTF-8 conversion, inbound payload bytes are hashed to generate immutable SHA-256 identifiers, exposed through `x-payload-sha256` headers to establish dataset provenance and lineage at the point of entry.
-
-#### Token Gateway: `engine-ml`
-
-A token-aware inference and routing layer implementing BPE-based context accounting (`cl100k_base`), concurrent caching (`DashMap`), and multi-tier model execution across local and remote endpoints. All content traverses a strict validation pipeline enforced through `RouterAuditEnvelope`, while a hard pre-routing ceiling (`FALLBACK_CHUNK_WORD_LIMIT = 24_999`) guarantees bounded execution and deterministic chunking behavior before downstream processing.
-
-#### Epistemic Matrix: `engine-core` 
-
-The primary reasoning substrate and typed scientific object registry. It defines structured research contracts such as `TopicNode`, `ResearchThreadObject`, and `ScientificHypothesisNode`, with shared serialization semantics across native and WebAssembly targets. Core analytical operations include structural intersections, conceptual overlap detection, and graph reasoning. These operations execute through pure Rust data structures (HashSet, typed collections), eliminating runtime Python dependencies from the mathematical execution path.
-
-#### Simulation Twin: `engine-wasm`
-
-A browser-compatible execution target exposing a constrained, deterministic subset of `engine-core`. Compiled for `wasm32-unknown-unknown`, it enables interactive visualization, lightweight inference, and research graph exploration while maintaining execution parity with native implementations. Operating within browser-isolated execution environments, it provides a deterministic simulation twin free from native operating-system call dependencies.
-
-#### Deterministic Runtime Substrate: `engine-kernel`
-
-A `#![no_std]` Rust kernel (`x86_64-unknown-none`) implementing coroutine scheduling through `KernelFiber` and lock-free communication primitives via `KernelChannel`. The kernel provides capability-oriented isolation boundaries, deterministic scheduling semantics, and foundational execution primitives for future distributed or embedded deployments.
-
-#### Lineage Orchestrator: `optiserver`
-
-An asynchronous Python ASGI orchestration layer responsible for coordinating execution workflows, lineage tracking, experiment state management, and long-running analytical processes. Results are persisted through append-only JSONL logs, ensuring auditability, crash recovery, and replayability while allowing visualization layers such as Streamlit to remain stateless.
-
-### System Invariant
-
-Together, these components form a strict functional transformation pipeline:
-
-**Dataset Ingestion → Provenance Capture → Token Routing → Epistemic Computation → Simulation/Visualization → Lineage Persistence**
-
-Each stage exposes explicit contracts, preserves transformation history, and minimizes cross-layer coupling, enabling reproducible scientific workflows, deterministic execution paths, and future self-improving research loops.
-
-## Architecture Overview
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/intelligentiaomni/grove/refs/heads/main/docs/assets/hyperbolic_architecture.svg_dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/intelligentiaomni/grove/refs/heads/main/docs/assets/hyperbolic_architecture.svg">
-    <img src="https://raw.githubusercontent.com/intelligentiaomni/grove/refs/heads/main/docs/assets/hyperbolic_architecture.svg" alt="Topology Map">
-  </picture>
-</p>
-
-<sub><b>Figure 1: Poincaré Disk Projection of the Architecture.</b> Nodes radiate from the central core across three main branches, compressing exponentially toward the perimeter. This layout demonstrates how complex terminal runtimes are structurally contained without cluttering the primary execution path.</sub>
-</p>
-
-## Technical Specifications
-
-- **Bare-Metal Isolation:** engine-kernel compiles under strict x86_64-unknown-none with zero standard-library (no_std) dependencies. Enforces object-level capabilities and atomic snapshots at the system boundary.
-
-- **Persistent Research State:** Operates via structured asynchronous coroutines (Research Threads) that manage execution context, inference traces, and iterative reasoning steps across long-horizon execution context loops.
-
-- **Dynamic Inference Routing:** Automated gateway (engine-ml/src/dynamic_router.rs) audits payload sizes using native tiktoken-rs cl100k_base() BPE token counting. Payload execution routing paths map directly to:
-
-   - **Local Sovereignty Path ($\le$ 40,000 tokens):** Dispatched via OLLAMA_ENDPOINT directly to local GPU hardware.
-
-   - **Deep Context Path (40,000 to 120,000 tokens):** Offloaded via SERVERLESS_ENDPOINT to high-context serverless providers such that it prevents local VRAM thrashing. Hard rejections are enforced for payloads exceeding the 120k limit.
-
-- **Automated Resilience Fallback:** If the serverless route encounters connection timeouts, HTTP status failures, or DNS drops, the engine intercepts the error using an implicit match block, logs a warning via eprintln!, and activates local chunked compression. It fragments the stream into chunks bounded by a strict FALLBACK_CHUNK_WORD_LIMIT = 24_999 and processes them sequentially over the local GPU before merging outputs.
-
-- **Structured Epistemic Filtering:** Eliminates code duplication by standardizing shared serde primitives (TopicNode { what, who, next_step } and CorrespondenceGraph { nodes }) in engine-core/src/correspondence.rs.
-
-- **Zero-Copy Serialization Path:** The web interface handler (engine-server/src/main.rs) converts raw inbound POST HTTP Bytes into un-cloned &str references, forwarding text arrays directly to the inference layer to avoid heap fragmentation.
-
-- **Institutional-scale dataset ingest:** Features an in-memory, zero-dependency Apache Parquet stream deserializer (engine-server/src/hf_ingest.rs) targeting structured, PII-scrubbed datasets like FineWeb-Edu and FinePDFs via authenticated HTTP range requests. It automatically binds source document hashes to extracted topic nodes to maintain complete data provenance.
-
-- **Sanitized Embedded Visualizations:** Exposes a GET route /api/v1/viz/network-graph that reads from the append-only SQLite lineage database and exports formatted topological JSON manifests under kernel_store/visualizations. Filenames are dynamically scrubbed of slashes, whitespace, and query parameters using safe underscore sanitization.
-
-- **Cross-Target Platform Uniformity:** Native storage requirements (rusqlite) are strictly gated away from WebAssembly blocks, ensuring that engine-core and engine-wasm compile smoothly under wasm32-unknown-unknown for web implementations.
-
-## Quick Start
-
-```bash
-cargo build --release --workspace
-cargo run --release -p engine-server
+```text
+CSV input
+  -> Parser
+  -> Knowledge graph
+  -> Forecast
+  -> Optimization
+  -> Recommendation
+  -> Ledger entry
+  -> REST API and UI
 ```
 
-Ingest → stream → visualize:
+Every edge in that pipeline carries provenance metadata: input hash, output hash, operation name, timestamp, evidence, and reasoning. The MVP exposes this through three live API surfaces:
 
-```bash
-POST /api/v1/ingest
-GET  /api/v1/viz/network-graph
+```text
+GET /forecast
+GET /lineage
+GET /graph
 ```
 
-## Project Metadata
+The point is intentionally narrow: a working vertical slice that demonstrates forecasts with machine-verifiable provenance.
 
-- **License:** Apache License 2.0, copyright 2025 IO Lab. See `LICENSE` and `NOTICE`.
-- **Security:** Maintainers with write access are expected to enable GitHub two-factor authentication. See `.github/SECURITY.md`.
-- **Sponsors:** GitHub Sponsors is configured through `.github/FUNDING.yml`; details live in `.github/SPONSORS.md`.
+## Architecture
 
-### Attribution
+The submission freezes the architecture into five layers:
 
-Visual diagram and images produced through a collaborative synthesis of author-led conceptual sketches plus GPT-5.5/Image 2.0 reasoning.
+```text
+UI
+  -> Gateway API
+  -> Engine
+      -> ingest/
+      -> lineage/
+      -> graph/
+      -> forecaster/
+      -> ledger/
+  -> Storage
+```
 
-### Research Directions 
+For the MVP, the gateway and engine are implemented as a compact Python standard-library service in `services/gateway_api.py`. The service parses telemetry CSV, computes a simple next-value forecast, builds a graph of the computation path, and appends every transition to `ledger/transitions.jsonl`.
 
-* Retrieval-based reasoning over persistent graph-structured memory states
-* Automated experimentation as state evolution on typed execution graphs
-* Literature triangulation across heterogeneous knowledge sources
-* Collective intelligence as distributed scientific reasoning systems
+The repository also contains deeper Rust research-engine modules under `engine/`. Those modules show the longer-term substrate direction: typed execution, graph lineage, forecasting, ingestion, kernel experimentation, and reproducible research workflows.
+
+## Demo
+
+Start the vertical slice:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+```text
+http://localhost:5173
+```
+
+Run the API directly:
+
+```bash
+curl http://localhost:8080/forecast
+curl http://localhost:8080/lineage
+curl http://localhost:8080/graph
+```
+
+Ingest the sample telemetry file:
+
+```bash
+curl -X POST http://localhost:8080/ingest \
+  -H "Content-Type: application/json" \
+  -d @demo/payloads/telemetry_ingest.json
+```
+
+The ledger is written to:
+
+```text
+ledger/transitions.jsonl
+```
+
+## Demo Flow
+
+The 3-4 minute demo is scripted in `demo/demo_script.md`.
+
+The message of the demo is simple:
+
+```text
+Existing workflows summarize heterogeneous evidence.
+Grove turns heterogeneous evidence into traceable forecasts.
+Every screen reinforces the same capability:
+forecasts with machine-verifiable provenance.
+```
+
+## Roadmap
+
+- Add PDF ingestion with structured citation extraction.
+- Add JSON incident-report ingestion beside telemetry CSV.
+- Replace the MVP forecaster with pluggable model backends.
+- Store graph and ledger state in SQLite/Postgres for concurrent execution.
+- Add replay verification: recompute a forecast from ledger entries and compare hashes.
+- Add signed ledger checkpoints for regulated environments.
+- Extend the UI from graph inspection to replay, diffing, and confidence diagnostics.
+
+## Aviation Analogy
+
+Before formal aeronautics, humanity looked to the skies through lighter-than-air craft, myths, kites in ancient China, Leonardo da Vinci's conceptual sketches, and unpowered gliders such as those attributed to Abbas Ibn Firnas in the 9th century. Grove treats AI reproducibility as a similar transition point: moving from impressive flight-like outputs toward the engineering discipline required to explain, replay, and certify how those outputs were produced.
+
+## Submission Materials
+
+- Project description: this README
+- Demo script: `demo/demo_script.md`
+- Sample ingest payload: `demo/payloads/telemetry_ingest.json`
+- API service: `services/gateway_api.py`
+- UI: `ui/`
+- Ledger output: `ledger/transitions.jsonl`
